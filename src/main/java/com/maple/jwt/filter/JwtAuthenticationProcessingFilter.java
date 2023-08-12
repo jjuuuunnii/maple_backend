@@ -6,14 +6,11 @@ import com.maple.exception.ErrorCode;
 import com.maple.jwt.service.JwtService;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.repository.user.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.maple.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -22,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Optional;
 
 
 
@@ -33,13 +29,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
     
     private final JwtService jwtService;
+
     private final UserRepository userRepository;
 
     public JwtAuthenticationProcessingFilter(JwtService jwtService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
+
     }
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -60,6 +58,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
          */
         if (refreshToken != null) {
               reIssueAccessTokenAndRefreshToken(refreshToken, response);
+              filterChain.doFilter(request,response);
         }
 
         /**
@@ -78,7 +77,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         user -> {
                             String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
-                            user.updateRefreshToken(reIssuedRefreshToken);
+                            jwtService.updateRefreshToken(user.getEmail(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
                         },
                         () -> new CustomException(ErrorCode.USER_NOT_FOUND)
@@ -101,7 +100,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void saveAuthentication(User user) {
-        user.checkAndUpdatePassword();      //소셜 로그인의 경우 비밀번호를 임시로 생성
         PrincipalDetails principalDetails = new PrincipalDetails(user);
 
         Authentication authentication =

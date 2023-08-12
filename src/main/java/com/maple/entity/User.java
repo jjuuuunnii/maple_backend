@@ -1,5 +1,6 @@
 package com.maple.entity;
 
+import com.maple.oauth2.userinfo.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,10 +42,6 @@ public class User {
 
     public User(){}
 
-    public void updateRefreshToken(String refreshToken){
-        this.refreshToken = refreshToken;
-    }
-
     public void setDefaultTreeAndCharacter(){
         this.tree = "Maple tree";
         this.character = "Maple Character";
@@ -54,10 +51,9 @@ public class User {
         this.character = character;
     }
 
-    public void checkAndUpdatePassword(){
-        if(this.password == null){
-            this.password = UUID.randomUUID().toString();
-        }
+    public void updatePassword(){
+        this.password = UUID.randomUUID().toString();
+
     }
 
     public static User toEntity(String name, String email, String password){
@@ -70,6 +66,5 @@ public class User {
         user.timeFromSignup = 1;
         return user;
     }
-
 }
 

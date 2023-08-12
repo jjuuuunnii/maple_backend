@@ -2,6 +2,7 @@ package com.maple.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.maple.entity.User;
 import com.maple.exception.CustomException;
 import com.maple.exception.ErrorCode;
 import com.maple.repository.user.UserRepository;
@@ -74,8 +75,8 @@ public class JwtService {
 
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setHeader(accessHeader, accessToken);
-        response.setHeader(refreshHeader, refreshToken);
+        response.setHeader(accessHeader, BEARER + accessToken);
+        response.setHeader(refreshHeader, BEARER + refreshToken);
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
@@ -105,13 +106,13 @@ public class JwtService {
     }
 
     @Transactional
-    public void updateRefreshToken(String email, String refreshToken){
-        userRepository.findByEmail(email)
-                .ifPresentOrElse(
-                        user -> user.updateRefreshToken(refreshToken),
-                        () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-                );
+    public void updateRefreshToken(String email, String refreshToken) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        user.setRefreshToken(refreshToken);
     }
+
 
     public boolean isTokenValid(String token){
         try{

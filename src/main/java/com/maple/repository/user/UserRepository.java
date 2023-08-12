@@ -1,5 +1,6 @@
 package com.maple.repository.user;
 
+import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.exception.CustomException;
 import com.maple.exception.ErrorCode;
@@ -64,4 +65,17 @@ public class UserRepository {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId) {
+        try {
+            User user = (User) em.createQuery("select u from User u where u.socialType = :socialType and u.socialId = :socialId")
+                    .setParameter("socialType", socialType)
+                    .setParameter("socialId", socialId)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
 }

@@ -52,7 +52,6 @@ public class UserService {
     }
 
 
-
     private String getEncodedPassword(UserSignupDto userSignupDto) {
         return passwordEncoder.encode(userSignupDto.getPassword());
     }
