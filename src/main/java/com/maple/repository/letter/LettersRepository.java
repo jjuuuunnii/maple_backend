@@ -1,10 +1,8 @@
-package com.maple.repository.user;
-
+package com.maple.repository.letter;
 import com.maple.entity.Letter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +10,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class LetterRepository {
+public class LettersRepository {
 
     private final EntityManager em;
 

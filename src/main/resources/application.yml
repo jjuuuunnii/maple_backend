@@ -34,10 +34,22 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+    open-in-view: false
+
+jwt:
+  secretKey: alkjfio1jk3j1igasnafbvkanlsdfipo123kj1h51AASDFfggdfafsdbaQWEFGSDgasdfl23jopasd124~~
+
+  access:
+    expiration: 3600000 # 1시간
+    header: Authorization
+
+  refresh:
+    expiration: 4320000000 # 50일
+    header: ReAuthorization
 
 logging.level:
   org.hibernate.SQL: debug

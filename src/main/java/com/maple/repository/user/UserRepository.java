@@ -6,8 +6,9 @@ import com.maple.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -33,5 +34,34 @@ public class UserRepository {
                 () -> {
                     throw new CustomException(ErrorCode.USER_NOT_FOUND);
                 });
+    }
+
+    public Optional<User> findByEmail(String email){
+        try {
+            User user = (User) em.createQuery("select u from User u where u.email = :email")
+                    .setParameter("email", email)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<User> findByRefreshToken(String refreshToken){
+        try {
+            User user = (User) em.createQuery("select u from User u where u.refreshToken = :refreshToken")
+                    .setParameter("refreshToken", refreshToken)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<User> findAllWithPaging(int pageNumber, int pageSize) {
+        return em.createQuery("select u from User u", User.class)
+                .setFirstResult(pageNumber * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
     }
 }
