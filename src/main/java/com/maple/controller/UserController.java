@@ -48,4 +48,14 @@ public class UserController {
     public void saveTreeAndCharacter(@PathVariable Long userId, @RequestBody UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
         userService.saveUserTreeAndCharacter(userId, userTreeAndCharacterSaveReqDto);
     }
+
+    @DeleteMapping("/auth/leave/{userId}")
+    public void leaveUser(@PathVariable Long userId) {
+        userService.leaveUser(userId);
+    }
+
+    @PutMapping("/auth/logout/{userId}")
+    public void logout(@PathVariable Long userId) {
+        userService.logout(userId);
+    }
 }

@@ -106,4 +106,16 @@ public class UserService {
                 userTreeAndCharacterSaveReqDto.getCharacterType());
 
     }
+
+    @Transactional
+    public void leaveUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
+    @Transactional
+    public void logout(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        });
+        user.setRefreshToken(null);
+    }
 }

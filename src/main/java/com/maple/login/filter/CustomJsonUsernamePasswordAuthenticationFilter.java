@@ -47,25 +47,4 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
             throw new AuthenticationException(ErrorCode.LOGIN_FAILED.getCode()){};
         }
     }
-
-/*    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
-        User user = principalDetails.getUser();
-        String email = user.getEmail();
-        SocialType socialType = user.getSocialType();
-
-        String accessToken = jwtService.createAccessToken(email, socialType);
-        String refreshToken = jwtService.createRefreshToken();
-        jwtService.updateRefreshToken(email, socialType, refreshToken);
-        log.info("{} 유저 로그인 성공", user.getEmail());
-
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-    }*/
-
-/*    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        log.info("=========================로그인 실패============================");
-        throw new AuthenticationException(ErrorCode.LOGIN_FAILED.getCode()){};
-    }*/
 }
