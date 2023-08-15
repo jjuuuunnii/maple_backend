@@ -1,6 +1,9 @@
 package com.maple.controller;
 
-import com.maple.dto.user.UserSignupDto;
+import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
+import com.maple.dto.user.res.OwnerHomeResDto;
+import com.maple.dto.user.res.UserInfoResDto;
+import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.entity.User;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.service.user.UserService;
@@ -18,12 +21,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth/signup/self")
-    public void saveUser(@RequestBody UserSignupDto userSignupDto) {
-        log.info("email = {}", userSignupDto.getEmail());
-        log.info("userName ={}", userSignupDto.getUserName());
-        log.info("password = {}", userSignupDto.getPassword());
-
-        userService.saveUser(userSignupDto);
+    public void saveUser(@RequestBody UserSignupReqDto userSignupReqDto) {
+        log.info("email = {}", userSignupReqDto.getEmail());
+        log.info("userName ={}", userSignupReqDto.getUserName());
+        log.info("password = {}", userSignupReqDto.getPassword());
+        userService.saveUser(userSignupReqDto);
     }
 
     @GetMapping("/test")
@@ -32,5 +34,18 @@ public class UserController {
         log.info("name = {} , email = {} ", user.getName(), user.getEmail());
     }
 
+    @GetMapping("/users")
+    public UserInfoResDto getUserInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return userService.getUserInfo(principalDetails.getUser().getId());
+    }
 
+    @GetMapping("/users/{userId}")
+    public OwnerHomeResDto getOwnerHome(@PathVariable Long userId){
+        return userService.getOwnerHome(userId);
+    }
+
+    @PutMapping("/users/{userId}")
+    public void saveTreeAndCharacter(@PathVariable Long userId, @RequestBody UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
+        userService.saveUserTreeAndCharacter(userId, userTreeAndCharacterSaveReqDto);
+    }
 }

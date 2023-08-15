@@ -31,10 +31,13 @@ public class Letter {
     @JoinColumn(name = "member_id")
     private User user;
 
-    public void setLetterUser(User user, Letter letter){
+    public void setLetterUser(User user){
         this.user = user;
-        user.getLetters().add(letter);  //양방향 연관관계매핑
+        user.getLetters().add(this);  //양방향 연관관계매핑
     }
 
     public Letter(){}
+
+
+
 }

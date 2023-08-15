@@ -1,4 +1,4 @@
-package com.maple.dto.user;
+package com.maple.dto.user.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 @Builder
-public class UserSignupDto {
+public class UserSignupReqDto {
 
     @Email
     @NotBlank
@@ -25,6 +25,6 @@ public class UserSignupDto {
     @NotBlank
     private String password;
 
-    public UserSignupDto(){}
+    public UserSignupReqDto(){}
 
 }

@@ -44,6 +44,12 @@ public class User {
         this.tree = "Maple tree";
         this.character = "Maple Character";
     }
+
+    public void setTreeAndCharacter(String tree, String character){
+        this.tree = tree;
+        this.character = character;
+
+    }
     public void updateTreeAndCharacter(String tree, String character){
         this.tree = tree;
         this.character = character;
@@ -51,6 +57,18 @@ public class User {
 
     public void updatePassword(){
         this.password = UUID.randomUUID().toString();
+    }
+
+    public boolean isLettersOverFive(){
+        if (letters.size() >= 5) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public int letterCnt(){
+        return letters.size();
     }
 
     public static User toEntity(String name, String email, String password){
@@ -61,6 +79,9 @@ public class User {
                 .socialType(SocialType.DEFAULT)
                 .build();
         user.setDefaultTreeAndCharacter();
+        /**
+         * TODO 서버가 닫힐때, 30일이 이하로 남아있을때의 구현이 필요
+         */
         user.timeFromSignup = 1;
         return user;
     }
