@@ -15,6 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
+/**
+ *
+ * @AuthenticationPrincipal 에서 꺼내쓰기 구현 필요, 인증 확인하기
+ * -> 조금 공부 하고 구현
+ *
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
