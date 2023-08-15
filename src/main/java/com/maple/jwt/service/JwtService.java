@@ -4,13 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
-import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.user.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,7 +102,7 @@ public class JwtService {
                     .asString());
         }catch(Exception e){
             log.info("유효하지 않은 엑세스 토큰입니다.");
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 
@@ -117,19 +117,14 @@ public class JwtService {
             return Optional.ofNullable(SocialType.valueOf(socialTypeStr));
         } catch(Exception e) {
             log.info("유효하지 않은 엑세스 토큰입니다.");
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 
-    /**
-     * TODO
-     * @param email
-     * @param refreshToken
-     */
     @Transactional
     public void updateRefreshToken(String email, SocialType socialType ,String refreshToken) {
         User user = userRepository.findByEmailAndSocialType(socialType,email)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> {throw new AuthenticationException(ErrorCode.USER_NOT_FOUND.getCode()) {};});
 
         user.setRefreshToken(refreshToken);
     }
@@ -141,7 +136,7 @@ public class JwtService {
             return true;
         }catch(Exception e){
             log.info("유효하지 않은 토큰입니다.");
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 }

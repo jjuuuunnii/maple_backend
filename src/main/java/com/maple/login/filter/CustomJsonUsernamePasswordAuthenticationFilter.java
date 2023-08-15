@@ -1,20 +1,15 @@
 package com.maple.login.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maple.dto.user.UserLoginDto;
-import com.maple.entity.SocialType;
-import com.maple.entity.User;
-import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.jwt.service.JwtService;
-import com.maple.login.service.PrincipalDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import javax.servlet.FilterChain;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -39,7 +34,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         if (request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
-            throw new CustomException(ErrorCode.INVALID_REQUEST);
+            throw new AuthenticationException(ErrorCode.INVALID_REQUEST.getCode()){};
         }
         try {
             log.info("=========================로그인 시도============================");
@@ -49,11 +44,11 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
             );
         } catch (IOException e) {
             log.info("=========================로그인 실패============================");
-            throw new CustomException(ErrorCode.LOGIN_FAILED);
+            throw new AuthenticationException(ErrorCode.LOGIN_FAILED.getCode()){};
         }
     }
 
-    @Override
+/*    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         User user = principalDetails.getUser();
@@ -66,11 +61,11 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
         log.info("{} 유저 로그인 성공", user.getEmail());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-    }
+    }*/
 
-    @Override
+/*    @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         log.info("=========================로그인 실패============================");
-        throw new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getCode());
-    }
+        throw new AuthenticationException(ErrorCode.LOGIN_FAILED.getCode()){};
+    }*/
 }

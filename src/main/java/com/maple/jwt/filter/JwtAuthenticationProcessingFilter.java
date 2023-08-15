@@ -10,6 +10,7 @@ import com.maple.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -39,7 +40,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().equals(NO_CHECK_URL_LOGIN) || request.getRequestURI().equals(NO_CHECK_URL_SIGNUP)  ){
+        if(request.getRequestURI().equals(NO_CHECK_URL_LOGIN) || request.getRequestURI().equals(NO_CHECK_URL_SIGNUP) ){
             filterChain.doFilter(request,response);
             return;
         }
@@ -50,13 +51,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
+        log.info("refresh Token = {}", refreshToken);
 
         /**
          * refreshToken 유효한 상태 => refreshToken, accessToken, 둘다 발급해야하는 상태
          */
         if (refreshToken != null) {
               reIssueAccessTokenAndRefreshToken(refreshToken, response);
-              filterChain.doFilter(request,response);
+              return;
         }
 
         /**
@@ -71,15 +73,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private void reIssueAccessTokenAndRefreshToken(String refreshToken, HttpServletResponse response) {
         userRepository.findByRefreshToken(refreshToken)
-                .ifPresentOrElse(
+                .ifPresent(
                         user -> {
                             String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
                             jwtService.updateRefreshToken(user.getEmail(), user.getSocialType(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
-                        },
-                        () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-                        );
+                        }
+
+                );
 
     }
 
@@ -89,9 +91,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                             String email = jwtService.extractEmail(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                             SocialType socialType = jwtService.extractSocialType(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                             userRepository.findByEmailAndSocialType(socialType, email)
-                                    .ifPresentOrElse(
-                                            this::saveAuthentication,
-                                            () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+                                    .ifPresent(
+                                            this::saveAuthentication
                                     );
                             }
                 );

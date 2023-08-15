@@ -8,6 +8,7 @@ public enum ErrorCode {
 
     //400
     EMAIL_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "EMAIL ALREADY EXISTS"),
+    LOGIN_FAILED(HttpStatus.BAD_REQUEST, "LOGIN FAILED"),
 
     //401
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "INVALID TOKEN"),
@@ -16,7 +17,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER NOT FOUND"),
 
     //500
-    LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "LOGIN FAILED"),
+
     INVALID_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "INVALID REQUEST");
 
     private HttpStatus httpStatus;

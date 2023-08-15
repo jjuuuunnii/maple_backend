@@ -1,5 +1,4 @@
 package com.maple.login.service;
-
 import com.maple.entity.User;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.user.UserRepository;
@@ -15,7 +14,6 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findDefaultUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getCode()));
