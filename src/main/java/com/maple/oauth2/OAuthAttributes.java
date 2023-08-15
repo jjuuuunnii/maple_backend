@@ -9,6 +9,7 @@ import com.maple.oauth2.userinfo.OAuth2UserInfo;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -63,8 +64,10 @@ public class OAuthAttributes {
                 .socialId(oauth2UserInfo.getId())
                 .email(oauth2UserInfo.getEmail())
                 .password(UUID.randomUUID().toString())
+                .missions(new ArrayList<>())
                 .name(oauth2UserInfo.getName())
                 .build();
+
         user.setDefaultTreeAndCharacter();
         user.setTimeFromSignup(1);
         return user;

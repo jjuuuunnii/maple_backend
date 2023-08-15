@@ -1,5 +1,6 @@
 package com.maple.oauth2.service;
 
+import com.maple.entity.Mission;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.oauth2.OAuthAttributes;
@@ -72,6 +73,14 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
 
     public User saveUser(OAuthAttributes attributes, SocialType socialType) {
         User createdUser = attributes.toEntity(socialType, attributes.getOAuth2UserInfo());
+        for (int nowDate = 1; nowDate <= 30; nowDate++) {
+            Mission mission = Mission.builder()
+                    .missionStatus(false)
+                    .nowDate(nowDate)
+                    .build();
+            createdUser.getMissions().add(mission);
+            mission.setUser(createdUser);
+        }
         userRepository.save(createdUser);
         return createdUser;
     }

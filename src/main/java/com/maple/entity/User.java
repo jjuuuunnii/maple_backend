@@ -1,4 +1,5 @@
 package com.maple.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -17,6 +19,11 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
 
+
+    /**
+     * TODO 서버가 닫힐때, 30일이 이하로 남아있을때의 구현이 필요
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq")
@@ -25,6 +32,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Letter> letters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Mission> missions = new ArrayList<>();
 
     private String name;
     private String email;
@@ -36,7 +46,16 @@ public class User {
     private String refreshToken;
     private String tree;
     private String character;
+    private boolean todayMissionStatus;
     private int timeFromSignup;     //회원가입 한날부터 1일
+
+    @JsonIgnore
+    private static final int LAST_DAY =30;
+
+   /* @JsonIgnore
+    private static final int START_DAY =30;*/           // TODO 구현 필요
+
+
 
     public User(){}
 
@@ -45,11 +64,7 @@ public class User {
         this.character = "Maple Character";
     }
 
-    public void setTreeAndCharacter(String tree, String character){
-        this.tree = tree;
-        this.character = character;
 
-    }
     public void updateTreeAndCharacter(String tree, String character){
         this.tree = tree;
         this.character = character;
@@ -60,11 +75,7 @@ public class User {
     }
 
     public boolean isLettersOverFive(){
-        if (letters.size() >= 5) {
-            return true;
-        }else{
-            return false;
-        }
+        return (letters.size()>=5);
     }
 
     public int letterCnt(){
@@ -76,14 +87,22 @@ public class User {
                 .name(name)
                 .email(email)
                 .password(password)
+                .missions(new ArrayList<>())
                 .socialType(SocialType.DEFAULT)
                 .build();
+
+        for (int nowDate = 1; nowDate <= LAST_DAY; nowDate++) {
+            Mission mission = Mission.builder()
+                    .missionStatus(false)
+                    .nowDate(nowDate)
+                    .build();
+            user.getMissions().add(mission);
+            mission.setUser(user);
+        }
         user.setDefaultTreeAndCharacter();
-        /**
-         * TODO 서버가 닫힐때, 30일이 이하로 남아있을때의 구현이 필요
-         */
         user.timeFromSignup = 1;
         return user;
     }
+
 }
 

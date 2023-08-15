@@ -1,17 +1,14 @@
 package com.maple.config;
+
 import com.maple.exception.jwt.CustomAuthenticationEntryPoint;
 import com.maple.jwt.filter.JwtAuthenticationProcessingFilter;
-import com.maple.jwt.service.JwtService;
 import com.maple.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.maple.login.service.PrincipalDetailsService;
 import com.maple.oauth2.handler.OAuth2LoginFailureHandler;
 import com.maple.oauth2.handler.OAuth2LoginSuccessHandler;
 import com.maple.oauth2.service.CustomOAuthUserService;
-import com.maple.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;

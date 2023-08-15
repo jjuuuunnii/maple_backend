@@ -1,5 +1,4 @@
 package com.maple.service.user;
-
 import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
@@ -16,14 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-
-/**
- *
- * @AuthenticationPrincipal 에서 꺼내쓰기 구현 필요, 인증 확인하기
- * -> 조금 공부 하고 구현
- *
- */
 
 @Service
 @Slf4j
@@ -57,7 +48,10 @@ public class UserService {
 
         do {
             users = userRepository.findAllWithPaging(pageNumber, pageSize);
-            users.forEach(user -> user.setTimeFromSignup(user.getTimeFromSignup() + 1));
+            users.forEach(user -> {
+                user.setTimeFromSignup(user.getTimeFromSignup() + 1);
+                user.setTodayMissionStatus(false);  // 여기에서 todayMissionStatus를 false로 설정
+            });
             pageNumber++; // 다음 페이지로
         } while (!users.isEmpty()); // 더 이상 데이터가 없을 때까지 반복
     }
@@ -101,7 +95,7 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
 
-        user.setTreeAndCharacter(
+        user.updateTreeAndCharacter(
                 userTreeAndCharacterSaveReqDto.getTreeType(),
                 userTreeAndCharacterSaveReqDto.getCharacterType());
 

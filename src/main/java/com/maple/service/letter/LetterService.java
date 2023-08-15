@@ -12,6 +12,7 @@ import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.consolationLetter.ConsolationLetterRepository;
 import com.maple.repository.letter.LetterRepository;
 import com.maple.repository.user.UserRepository;
+import com.maple.service.mission.MissionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class LetterService {
     private final UserRepository userRepository;
     private final LetterRepository letterRepository;
     private final ConsolationLetterRepository consolationLetterRepository;
+    private final MissionService missionService;
+
     @Transactional
     public void saveLetter(Long userId, LetterSaveReqDto letterSaveReqDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -47,8 +50,30 @@ public class LetterService {
                 .build();
         letter.setLetterUser(user);
 
+        String content = letter.getSenderName()+" "+letter.getContent();
+
+        if(missionService.checkWordInLetter(content,user.getTimeFromSignup())){
+            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
+            user.setTodayMissionStatus(true);
+        }
+        if(missionService.checkLetterCount(user.letterCnt(),user.getTimeFromSignup())){
+            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
+            user.setTodayMissionStatus(true);
+        }
+        if (missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
+            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
+            user.setTodayMissionStatus(true);
+        }
+
         letterRepository.save(letter);
     }
+
+
+
+
+
+
+
 
     public LetterListResDto getLetterList(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
