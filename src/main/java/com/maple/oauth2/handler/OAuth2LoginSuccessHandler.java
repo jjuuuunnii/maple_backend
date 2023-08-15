@@ -20,18 +20,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
 
-    /**
-     * TODO
-     *
-     * OAuth2 user accessToken refreshToken 확인하기 필요
-     *
-     * @param request the request which caused the successful authentication
-     * @param response the response
-     * @param authentication the <tt>Authentication</tt> object which was created during
-     * the authentication process.
-     * @throws IOException
-     * @throws ServletException
-     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
@@ -41,7 +29,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
         jwtService.updateRefreshToken(auth2User.getEmail(), auth2User.getSocialType() ,refreshToken);
 
+        /**
+         * TODO
+         * 테스트 용도로 로그로 남김, 나중에 지울것
+         */
         log.info("accessToken = {} ", "Bearer " + accessToken);
+
     }
 
 
