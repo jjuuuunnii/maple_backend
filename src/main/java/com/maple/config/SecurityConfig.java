@@ -56,6 +56,7 @@ public class SecurityConfig {
                 .antMatchers("/api/auth/signup/self").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling().authenticationEntryPoint()
 
                 .oauth2Login()
                 .successHandler(oAuth2LoginSuccessHandler)

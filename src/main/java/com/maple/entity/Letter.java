@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,7 +24,8 @@ public class Letter {
 
     private String senderName;
     private String content;
-    private int createdAt;      //편지가 만들어진 시간, 유저의 회원가입 기준으로 1,2,3,,,,
+    private int createdAt;      // 유저 입장에서 유저가 받은 편지 날짜, 유저의 회원가입 기준으로 1,2,3,,,,
+    private LocalDateTime localDateTime;  // 유저가 받은 편지의 시간
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

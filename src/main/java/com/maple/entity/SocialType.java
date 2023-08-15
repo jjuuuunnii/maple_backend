@@ -1,5 +1,5 @@
 package com.maple.entity;
 
 public enum SocialType {
-    NAVER, KAKAO, GOOGLE
+    NAVER, KAKAO, GOOGLE, DEFAULT
 }

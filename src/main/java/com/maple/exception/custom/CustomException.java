@@ -1,4 +1,4 @@
-package com.maple.exception;
+package com.maple.exception.custom;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

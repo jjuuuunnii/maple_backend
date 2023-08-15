@@ -1,18 +1,19 @@
 package com.maple.login.filter;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maple.dto.user.UserLoginDto;
-import com.maple.exception.CustomException;
-import com.maple.exception.ErrorCode;
+import com.maple.entity.SocialType;
+import com.maple.entity.User;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.jwt.service.JwtService;
+import com.maple.login.service.PrincipalDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,12 +55,15 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        UserDetails userDetails = (UserDetails) authResult.getPrincipal();
-        String email = userDetails.getUsername();
-        String accessToken = jwtService.createAccessToken(email);
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        User user = principalDetails.getUser();
+        String email = user.getEmail();
+        SocialType socialType = user.getSocialType();
+
+        String accessToken = jwtService.createAccessToken(email, socialType);
         String refreshToken = jwtService.createRefreshToken();
-        jwtService.updateRefreshToken(email, refreshToken);
-        log.info("{} 유저 로그인 성공", userDetails.getUsername());
+        jwtService.updateRefreshToken(email, socialType, refreshToken);
+        log.info("{} 유저 로그인 성공", user.getEmail());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
     }
@@ -67,6 +71,6 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         log.info("=========================로그인 실패============================");
-        throw new CustomException(ErrorCode.LOGIN_FAILED);
+        throw new UsernameNotFoundException(ErrorCode.USER_NOT_FOUND.getCode());
     }
 }

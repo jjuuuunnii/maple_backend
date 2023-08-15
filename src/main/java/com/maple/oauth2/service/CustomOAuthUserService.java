@@ -2,19 +2,15 @@ package com.maple.oauth2.service;
 
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
-import com.maple.exception.CustomException;
-import com.maple.exception.ErrorCode;
 import com.maple.oauth2.OAuthAttributes;
 import com.maple.oauth2.userinfo.CustomOAuth2User;
 import com.maple.repository.user.UserRepository;
-import com.maple.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +45,7 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         User createdUser = getUser(extractAttributes, socialType);
 
         return new CustomOAuth2User(
-                null, attributes, userNameAttributeName, createdUser.getEmail()
+                null, attributes, userNameAttributeName, createdUser.getEmail(), socialType
         );
     }
 
@@ -63,10 +59,9 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         return SocialType.GOOGLE;
     }
 
-
     public User getUser(OAuthAttributes attributes, SocialType socialType) {
-        User findUser = userRepository.findBySocialTypeAndSocialId(socialType,
-                attributes.getOAuth2UserInfo().getId()).orElse(null);
+        User findUser = userRepository.findByEmailAndSocialType(socialType,
+                attributes.getOAuth2UserInfo().getEmail()).orElse(null);
 
         if(findUser == null) {
             return saveUser(attributes, socialType);

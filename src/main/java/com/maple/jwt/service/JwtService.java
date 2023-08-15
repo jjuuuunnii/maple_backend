@@ -2,21 +2,20 @@ package com.maple.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.maple.entity.SocialType;
 import com.maple.entity.User;
-import com.maple.exception.CustomException;
-import com.maple.exception.ErrorCode;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.user.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -44,16 +43,18 @@ public class JwtService {
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String EMAIL_CLAIM = "email";
+    private static final String SOCIAL_TYPE_CLAIM = "socialType";
     private static final String BEARER = "Bearer ";
 
     private final UserRepository userRepository;
 
-    public String createAccessToken(String email){
+    public String createAccessToken(String email, SocialType socialType){
         Date nowDate = new Date();
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(nowDate.getTime() + accessTokenExpirationPeriod))
                 .withClaim(EMAIL_CLAIM, email)
+                .withClaim(SOCIAL_TYPE_CLAIM, socialType.toString())
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
@@ -105,9 +106,29 @@ public class JwtService {
         }
     }
 
+    public Optional<SocialType> extractSocialType(String accessToken){
+        try {
+            String socialTypeStr = JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim(SOCIAL_TYPE_CLAIM)
+                    .asString();
+
+            return Optional.ofNullable(SocialType.valueOf(socialTypeStr));
+        } catch(Exception e) {
+            log.info("유효하지 않은 엑세스 토큰입니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    /**
+     * TODO
+     * @param email
+     * @param refreshToken
+     */
     @Transactional
-    public void updateRefreshToken(String email, String refreshToken) {
-        User user = userRepository.findByEmail(email)
+    public void updateRefreshToken(String email, SocialType socialType ,String refreshToken) {
+        User user = userRepository.findByEmailAndSocialType(socialType,email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         user.setRefreshToken(refreshToken);

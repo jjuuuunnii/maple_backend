@@ -57,12 +57,12 @@ public class OAuthAttributes {
                 .build();
     }
 
-
     public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
         User user = User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
                 .email(oauth2UserInfo.getEmail())
+                .password(UUID.randomUUID().toString())
                 .name(oauth2UserInfo.getName())
                 .build();
         user.setDefaultTreeAndCharacter();

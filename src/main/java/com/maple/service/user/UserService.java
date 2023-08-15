@@ -2,8 +2,8 @@ package com.maple.service.user;
 
 import com.maple.dto.user.UserSignupDto;
 import com.maple.entity.User;
-import com.maple.exception.CustomException;
-import com.maple.exception.ErrorCode;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +26,15 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserSignupDto userSignupDto){
-        validateDuplicateEmail(userSignupDto.getEmail());
+        validateDuplicateEmailAndSocialType(userSignupDto.getEmail());
         User user = User.toEntity(userSignupDto.getUserName(), userSignupDto.getEmail(), getEncodedPassword(userSignupDto));
         userRepository.save(user);
         log.info("{} 유저 회원가입 완료", user.getEmail());
     }
 
     @Transactional(readOnly = true)
-    public void validateDuplicateEmail(String email) {
-        userRepository.findByEmail(email)
+    public void validateDuplicateEmailAndSocialType(String email) {
+        userRepository.findDefaultUserByEmail(email)
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 

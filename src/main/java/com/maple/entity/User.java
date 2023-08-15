@@ -1,6 +1,4 @@
 package com.maple.entity;
-
-import com.maple.oauth2.userinfo.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,7 +51,6 @@ public class User {
 
     public void updatePassword(){
         this.password = UUID.randomUUID().toString();
-
     }
 
     public static User toEntity(String name, String email, String password){
@@ -61,6 +58,7 @@ public class User {
                 .name(name)
                 .email(email)
                 .password(password)
+                .socialType(SocialType.DEFAULT)
                 .build();
         user.setDefaultTreeAndCharacter();
         user.timeFromSignup = 1;

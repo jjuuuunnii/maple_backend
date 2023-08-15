@@ -1,12 +1,12 @@
 package com.maple.jwt.filter;
 
+import com.maple.entity.SocialType;
 import com.maple.entity.User;
-import com.maple.exception.CustomException;
-import com.maple.exception.ErrorCode;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.jwt.service.JwtService;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.repository.user.UserRepository;
-import com.maple.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
-
 
 
 @Slf4j
@@ -37,7 +36,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         this.userRepository = userRepository;
 
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -65,7 +63,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
          *  accessToken 유효성을 검사, 그 후 다음 필터로
          */
         if(refreshToken == null){
-            checkAccessTokenAndAuthentication(request,response);
+            checkAccessTokenAndAuthentication(request);
             filterChain.doFilter(request,response);
         }
     }
@@ -75,9 +73,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresentOrElse(
                         user -> {
-                            String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail());
+                            String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
-                            jwtService.updateRefreshToken(user.getEmail(), reIssuedRefreshToken);
+                            jwtService.updateRefreshToken(user.getEmail(), user.getSocialType(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
                         },
                         () -> new CustomException(ErrorCode.USER_NOT_FOUND)
@@ -85,17 +83,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     }
 
-    private void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    private void checkAccessTokenAndAuthentication(HttpServletRequest request) {
         jwtService.extractAccessToken(request)
-                .filter(jwtService::isTokenValid)
-                .ifPresent(
-                        accessToken -> jwtService.extractEmail(accessToken)
-                                .ifPresent(email -> userRepository.findByEmail(email)
-                                        .ifPresentOrElse(
-                                                this::saveAuthentication,
-                                                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-                                        )
-                                )
+                .ifPresent(accessToken -> {
+                            String email = jwtService.extractEmail(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                            SocialType socialType = jwtService.extractSocialType(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                            userRepository.findByEmailAndSocialType(socialType, email)
+                                    .ifPresentOrElse(
+                                            this::saveAuthentication,
+                                            () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+                                    );
+                            }
                 );
     }
 
