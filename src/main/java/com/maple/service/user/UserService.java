@@ -143,7 +143,7 @@ public class UserService {
     @Transactional
     public void saveTestData() {
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 1; i <= 30; i++) {
             ConsolationLetter letter = ConsolationLetter.builder()
                     .senderName("단풍이")
                     .content("안녕하세요!!")
@@ -154,7 +154,7 @@ public class UserService {
             User user = User.builder()
                     .name("testUser" + i)
                     .email("testUser" + i + "@naver.com")
-                    .password("test")
+                    .password(passwordEncoder.encode("test"))
                     .socialType(SocialType.DEFAULT)
                     .missions(new ArrayList<>())
                     .timeFromSignup(i)

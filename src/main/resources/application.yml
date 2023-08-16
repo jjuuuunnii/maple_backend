@@ -20,6 +20,20 @@
 
 
 spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/mapleDB
+#    username: test_user
+#    password: 1234
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#      properties:
+#        hibernate:
+#          format_sql: true
+
   security:
     oauth2:
       client:
@@ -69,7 +83,6 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -78,6 +91,9 @@ spring:
       hibernate:
         format_sql: true
     open-in-view: false
+#    h2데이터베이스 설정
+
+
 
 jwt:
   secretKey: alkjfio1jk3j1igasnafbvkanlsdfipo123kj1h51AASDFfggdfafsdbaQWEFGSDgasdfl23jopasd124~~
@@ -92,3 +108,8 @@ jwt:
 
 logging.level:
   org.hibernate.SQL: debug
+
+
+my-env:
+  first: ${FIRST_MALLANG_ENV}
+  second: ${SECOND_MALLANG_ENV}
