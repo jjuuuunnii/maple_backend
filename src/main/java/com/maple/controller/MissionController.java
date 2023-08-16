@@ -2,6 +2,7 @@ package com.maple.controller;
 
 
 import com.maple.dto.mission.req.FirstMissionReqDto;
+import com.maple.dto.mission.req.MissionCompleteButtonClickReqDto;
 import com.maple.dto.mission.res.StampStatusListResDto;
 import com.maple.dto.mission.res.TodayMissionStatusResDto;
 import com.maple.service.mission.MissionService;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class MissionController {
 
     private final MissionService missionService;
-
 
     @PutMapping("/{nowDate}")
     public void firstMission(@RequestBody FirstMissionReqDto firstMissionReqDto,
@@ -33,6 +33,12 @@ public class MissionController {
     @GetMapping("/todayMission")
     public TodayMissionStatusResDto getTodayMissionStatus(@PathVariable Long userId) {
         return missionService.getTodayMissionStatus(userId);
-
     }
+
+    @PutMapping("/todayMission")
+    public void setTodayStampToUser(@PathVariable Long userId, MissionCompleteButtonClickReqDto missionCompleteButtonClickReqDto){
+        missionService.setTodayStamp(userId, missionCompleteButtonClickReqDto.isMissionCompleteButtonClick());
+    }
+
+
 }

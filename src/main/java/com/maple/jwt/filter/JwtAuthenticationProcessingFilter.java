@@ -29,7 +29,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
     
     private final JwtService jwtService;
-
     private final UserRepository userRepository;
 
     public JwtAuthenticationProcessingFilter(JwtService jwtService, UserRepository userRepository) {
@@ -40,7 +39,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().equals(NO_CHECK_URL_LOGIN) || request.getRequestURI().equals(NO_CHECK_URL_SIGNUP) ){
+        if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN) || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP) ){
             filterChain.doFilter(request,response);
             return;
         }

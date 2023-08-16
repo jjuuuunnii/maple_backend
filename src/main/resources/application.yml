@@ -25,22 +25,22 @@ spring:
       client:
         registration:
           google:
-            client-id: 985878687237-cicutlukd65ppl03l9cr1itf38fs66t4.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 218208684979-6jfheqtpgbilaoime3bmrkejoum7uraq.apps.googleusercontent.com
+            client-secret: ExcZessaWr
             scope: email, profile
 
           naver:
-            client-id: VdrgQTkuTzW0ZzQ4KRf8
-            client-secret: FrehdkhQpq
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            client-id: 5keAKLq2eJQRXKCOoyPL
+            client-secret: ExcZessaWr
+            redirect-uri: http://localhost:8080/OwnerHome
             authorization-grant-type: authorization_code
             scope: name, email
             client-name: Naver
 
           kakao:
-            client-id: 6cd76732b83c309a873e9789558b32cc
-            client-secret: HeqZwFlX6QRnLny2TXgg4S1gA2RtUJ5t
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-id: 6e74f4c6f4ac3d46a43811e68cb79984
+            client-secret: hrmF3nWsqCKcto29hO3IHcZU42mSlpUm
+            redirect-uri: https://localhost:8080/OwnerHome
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             scope: profile_nickname, account_email

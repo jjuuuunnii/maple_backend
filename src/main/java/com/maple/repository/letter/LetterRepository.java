@@ -50,6 +50,8 @@ public class LetterRepository {
 
 
 
+
+
     public List<Letter> findByUserIdAndSelectedDate(Long userId, int selectedDate) {
         return em.createQuery("select l from Letter l where l.user.id =: userId And l.createdAt =: selectedDate")
                 .setParameter("userId", userId)

@@ -52,6 +52,10 @@ public class LetterService {
 
         String content = letter.getSenderName()+" "+letter.getContent();
 
+        /**
+         *
+         * TODO
+         */
         if(missionService.checkWordInLetter(content,user.getTimeFromSignup())){
             user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
             user.setTodayMissionStatus(true);
@@ -67,12 +71,6 @@ public class LetterService {
 
         letterRepository.save(letter);
     }
-
-
-
-
-
-
 
 
     public LetterListResDto getLetterList(Long userId) {

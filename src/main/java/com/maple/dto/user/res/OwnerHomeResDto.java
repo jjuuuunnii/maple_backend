@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,6 +16,6 @@ public class OwnerHomeResDto {
     private String characterType;
     private String userName;
     private int nowDate;
-    private boolean lettersOverFive;
+    private List<Boolean> lettersOverFive;
 
 }

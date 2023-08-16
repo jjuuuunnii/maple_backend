@@ -60,7 +60,7 @@ public class User {
     public User(){}
 
     public void setDefaultTreeAndCharacter(){
-        this.tree = "Maple tree";
+        this.tree = "Maple Tree";
         this.character = "Maple Character";
     }
 

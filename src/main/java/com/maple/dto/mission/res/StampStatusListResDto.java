@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class StampStatusListResDto {
-    private List<StampStatus> stampStatusList;
+    private List<StampStatus> stampsStatus;
 
     public StampStatusListResDto(){}
 }
