@@ -39,6 +39,4 @@ public class MissionController {
     public void setTodayStampToUser(@PathVariable Long userId, MissionCompleteButtonClickReqDto missionCompleteButtonClickReqDto){
         missionService.setTodayStamp(userId, missionCompleteButtonClickReqDto.isMissionCompleteButtonClick());
     }
-
-
 }
