@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                .antMatchers("/api/auth/signup/self").permitAll()
+                .antMatchers("/api/auth/signup/self", "/api/testDataInit").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

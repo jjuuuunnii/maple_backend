@@ -3,9 +3,13 @@ import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
 import com.maple.dto.user.req.UserSignupReqDto;
+import com.maple.entity.ConsolationLetter;
+import com.maple.entity.Mission;
+import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
+import com.maple.repository.consolationLetter.ConsolationLetterRepository;
 import com.maple.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // 비밀번호 인코딩을 위한 인스턴스
+    private final ConsolationLetterRepository consolationLetterRepository;
 
     @Transactional
     public void saveUser(UserSignupReqDto userSignupReqDto){
@@ -50,10 +56,10 @@ public class UserService {
             users = userRepository.findAllWithPaging(pageNumber, pageSize);
             users.forEach(user -> {
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
-                user.setTodayMissionStatus(false);  // 여기에서 todayMissionStatus를 false로 설정
+                user.setTodayMissionStatus(false);
             });
-            pageNumber++; // 다음 페이지로
-        } while (!users.isEmpty()); // 더 이상 데이터가 없을 때까지 반복
+            pageNumber++;
+        } while (!users.isEmpty());
     }
 
 
@@ -111,5 +117,41 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         user.setRefreshToken(null);
+    }
+
+    @Transactional
+    public void saveTestData() {
+
+        for (int i = 0; i < 30; i++) {
+            ConsolationLetter letter = ConsolationLetter.builder()
+                    .senderName("단풍이")
+                    .content("안녕하세요!!")
+                    .build();
+            consolationLetterRepository.save(letter);
+
+
+            User user = User.builder()
+                    .name("testUser" + i)
+                    .email("testUser" + i + "@naver.com")
+                    .password("test")
+                    .socialType(SocialType.DEFAULT)
+                    .missions(new ArrayList<>())
+                    .timeFromSignup(i)
+                    .build();
+
+            user.setDefaultTreeAndCharacter();
+
+            for (int nowDate = 1; nowDate <= 30; nowDate++) {
+                Mission mission = Mission.builder()
+                        .missionStatus(false)
+                        .nowDate(nowDate)
+                        .build();
+                user.getMissions().add(mission);
+                mission.setUser(user);
+            }
+
+            userRepository.save(user);
+
+        }
     }
 }
