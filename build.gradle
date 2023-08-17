@@ -23,16 +23,15 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
 	compileOnly 'org.projectlombok:lombok:1.18.24'
-	runtimeOnly 'com.h2database:h2:1.4.200'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'com.auth0:java-jwt:4.3.0'
 	implementation 'org.json:json:20230227'
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//	implementation 'mysql:mysql-connector-java:8.0.26' // 예시로 8.0.26 버전을 지정했습니다.
-
+	implementation 'org.postgresql:postgresql'
+//	runtimeOnly 'com.h2database:h2:1.4.200'
 }
 
 tasks.named('test') {
