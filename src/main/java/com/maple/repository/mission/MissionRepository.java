@@ -30,4 +30,11 @@ public class MissionRepository {
     }
 
 
+    public Mission findMissionByUserIdAndNowDate(Long userId, int nowDate) {
+        return em.createQuery("select m from Mission m where m.user.id = :userId and m.nowDate = :nowDate", Mission.class)
+                .setParameter("userId", userId)
+                .setParameter("nowDate", nowDate)
+                .getSingleResult();
+
+    }
 }

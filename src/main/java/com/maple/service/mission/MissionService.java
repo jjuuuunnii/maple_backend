@@ -114,6 +114,6 @@ public class MissionService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         missionRepository.saveMissionStatusWithNowDateAndStatus(status, user.getTimeFromSignup(), userId);
-        return user.getMissions().get(user.getTimeFromSignup()-1).isMissionStatus();
+        return missionRepository.findMissionByUserIdAndNowDate(userId, user.getTimeFromSignup()).isMissionStatus();
     }
 }
