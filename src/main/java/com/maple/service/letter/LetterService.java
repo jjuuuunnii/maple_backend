@@ -83,7 +83,7 @@ public class LetterService {
         for (int date = 1; date <= 30; date++) {
             long count = countByDate.getOrDefault(date, 0L);
             if (date <= user.getTimeFromSignup()) {
-                lettersOverFive.add(count > 5);
+                lettersOverFive.add(count >= 5);
             } else {
                 lettersOverFive.add(false);
             }

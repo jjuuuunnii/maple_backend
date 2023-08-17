@@ -36,7 +36,10 @@ public class MissionController {
     }
 
     @PutMapping("/todayMission")
-    public void setTodayStampToUser(@PathVariable Long userId, MissionCompleteButtonClickReqDto missionCompleteButtonClickReqDto){
-        missionService.setTodayStamp(userId, missionCompleteButtonClickReqDto.isMissionCompleteButtonClick());
+    public boolean setTodayStampToUser(@PathVariable Long userId, @RequestBody MissionCompleteButtonClickReqDto missionCompleteButtonClickReqDto){
+        log.info("MissionCompleteButtonClickReqDto = {} ", missionCompleteButtonClickReqDto.isMissionCompleteButtonClick());
+        boolean b = missionService.setTodayStamp(userId, missionCompleteButtonClickReqDto.isMissionCompleteButtonClick());
+        log.info("missionService ={}", b);
+        return b;
     }
 }

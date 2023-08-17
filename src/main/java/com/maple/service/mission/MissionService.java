@@ -1,9 +1,7 @@
 package com.maple.service.mission;
-
-import com.maple.dto.mission.req.MissionCompleteButtonClickReqDto;
-import com.maple.dto.mission.res.StampStatus;
 import com.maple.dto.mission.res.StampStatusListResDto;
 import com.maple.dto.mission.res.TodayMissionStatusResDto;
+import com.maple.entity.Mission;
 import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
@@ -15,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,17 +45,22 @@ public class MissionService {
     public StampStatusListResDto getStampStatus(Long userId) {
         return userRepository.findById(userId).map(
                 user -> {
-                    List<Boolean> missionStatuses = missionRepository.findMissionStatusListByUserId(userId);
+                    List<Mission> missions = missionRepository.findMissionByUserId(userId);
 
-                    List<StampStatus> stampStatuses = missionStatuses.stream()
-                            .map(StampStatus::new)
-                            .collect(Collectors.toList());
+                    missions.sort(Comparator.comparing(Mission::getId));
+                    List<Boolean> missionStatuses = new ArrayList<>();
+                    for (Mission mission : missions) {
+                        log.info("mission = {}", mission.getId());
+                        missionStatuses.add(mission.isMissionStatus());
+                    }
 
                     return StampStatusListResDto.builder()
-                            .stampsStatus(stampStatuses)
+                            .stampsStatus(missionStatuses)
                             .build();
                 }).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
+
+
 
     @Transactional(readOnly = true)
     public TodayMissionStatusResDto getTodayMissionStatus(Long userId) {
@@ -102,11 +107,13 @@ public class MissionService {
         return false;
     }
 
+
     @Transactional
-    public void setTodayStamp(Long userId, boolean status) {
+    public boolean setTodayStamp(Long userId, boolean status) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
-        user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(status);
+        missionRepository.saveMissionStatusWithNowDateAndStatus(status, user.getTimeFromSignup(), userId);
+        return user.getMissions().get(user.getTimeFromSignup()-1).isMissionStatus();
     }
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.lang.reflect.Member;
 import java.util.List;
 
 @Repository
@@ -22,10 +23,11 @@ public class MissionRepository {
         mission.setMissionStatus(status);
     }
 
-    public List<Boolean> findMissionStatusListByUserId(Long userId) {
-        return em.createQuery("select m.missionStatus from Mission m where m.user.id = :userId", Boolean.class)
+    public List<Mission> findMissionByUserId(Long userId){
+        return em.createQuery("select m from Mission m where m.user.id =: userId",Mission.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
+
 
 }
