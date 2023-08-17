@@ -56,18 +56,12 @@ public class LetterService {
          *
          * TODO
          */
-        if(missionService.checkWordInLetter(content,user.getTimeFromSignup())){
-            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
+        if (missionService.checkWordInLetter(content, user.getTimeFromSignup()) ||
+                missionService.checkLetterCount(user.letterCnt(), user.getTimeFromSignup()) ||
+                missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
             user.setTodayMissionStatus(true);
         }
-        if(missionService.checkLetterCount(user.letterCnt(),user.getTimeFromSignup())){
-            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
-            user.setTodayMissionStatus(true);
-        }
-        if (missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
-            user.getMissions().get(user.getTimeFromSignup()).setMissionStatus(true);
-            user.setTodayMissionStatus(true);
-        }
+
 
         letterRepository.save(letter);
     }
