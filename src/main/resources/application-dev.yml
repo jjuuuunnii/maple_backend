@@ -1,4 +1,8 @@
 spring:
+  config:
+    activate:
+      on-profile: dev
+
   datasource:
     maximum-pool-size: 4
     url: jdbc:postgresql://localhost:5432/mapledb

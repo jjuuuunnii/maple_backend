@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
     maximum-pool-size: 4
     url: ${RDS_URL}
