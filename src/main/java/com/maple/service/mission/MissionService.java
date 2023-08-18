@@ -97,7 +97,7 @@ public class MissionService {
     }
 
     public boolean checkLetterTime(LocalDateTime localDateTime, int nowDate) {
-        int[] timeToCheck = {9,10,21,22,23};
+        int[] timeToCheck = {19,20,21,22,23};
         int[] datesToCheck ={6, 11, 16, 21, 26};
         for (int i =0; i<datesToCheck.length; i++) {
             if(nowDate == datesToCheck[i] && (localDateTime.getHour()>=timeToCheck[i] && localDateTime.getHour()<=timeToCheck[i+1])){
