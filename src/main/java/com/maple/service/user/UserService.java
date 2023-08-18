@@ -4,10 +4,7 @@ import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
 import com.maple.dto.user.req.UserSignupReqDto;
-import com.maple.entity.ConsolationLetter;
-import com.maple.entity.Mission;
-import com.maple.entity.SocialType;
-import com.maple.entity.User;
+import com.maple.entity.*;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.consolationLetter.ConsolationLetterRepository;
@@ -19,6 +16,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +33,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder; // 비밀번호 인코딩을 위한 인스턴스
     private final ConsolationLetterRepository consolationLetterRepository;
     private final LetterRepository letterRepository;
+    private final EntityManager entityManager;
 
     @Transactional
     public void saveUser(UserSignupReqDto userSignupReqDto){
@@ -143,6 +144,7 @@ public class UserService {
     @Transactional
     public void saveTestData() {
 
+
         for (int i = 1; i <= 30; i++) {
             ConsolationLetter letter = ConsolationLetter.builder()
                     .senderName("단풍이")
@@ -172,7 +174,6 @@ public class UserService {
             }
 
             userRepository.save(user);
-
         }
     }
 }
