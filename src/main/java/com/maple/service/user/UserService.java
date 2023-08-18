@@ -1,10 +1,14 @@
 package com.maple.service.user;
+
 import com.maple.dto.letter.LetterCountDto;
+import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
-import com.maple.dto.user.req.UserSignupReqDto;
-import com.maple.entity.*;
+import com.maple.entity.ConsolationLetter;
+import com.maple.entity.Mission;
+import com.maple.entity.SocialType;
+import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.consolationLetter.ConsolationLetterRepository;
@@ -18,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
