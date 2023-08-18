@@ -86,8 +86,8 @@ public class MissionService {
 
 
     public boolean checkLetterCount(int letterCnt, int nowDate) {
-        int[] datesToCheck = {8, 10, 13, 15, 18, 20, 23, 25, 28, 30};
-        int[] letterCountToCheck = {5, 5, 6, 6, 7, 7, 8, 8, 9, 9};
+        int[] datesToCheck = {3,5,8, 10, 13, 15, 18, 20, 23, 25, 28, 30};
+        int[] letterCountToCheck = {5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10};
         for (int i =0; i<datesToCheck.length; i++) {
             if(letterCnt >= letterCountToCheck[i] && nowDate == datesToCheck[i]){
                 return true;
