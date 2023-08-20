@@ -1,7 +1,8 @@
-package com.maple.oauth.provider;
+package com.maple.oauth.provider.naver;
 
 import com.maple.entity.SocialType;
 import com.maple.oauth.config.naver.NaverOauthConfig;
+import com.maple.oauth.provider.AuthCodeRequestUrlProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,8 +26,7 @@ public class NaverAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvid
                 .queryParam("response_type", "code")
                 .queryParam("client_id", naverOauthConfig.getClientId())
                 .queryParam("redirect_uri",naverOauthConfig.getRedirectUri())
-                .queryParam("state", naverOauthConfig.getState())
-                .build()
+                .queryParam("state", naverOauthConfig.getState()).build()
                 .toUriString();
     }
 }

@@ -2,7 +2,6 @@ package com.maple.oauth.controller;
 
 import com.maple.entity.SocialType;
 import com.maple.oauth.service.OauthService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +32,11 @@ public class OauthController {
     public ResponseEntity<Void> login(
             @PathVariable SocialType oauthServerType,
             @RequestParam("code") String code,
-            HttpServletResponse response,
-            HttpServletRequest request
+            HttpServletResponse response
     ) {
-
-
         oauthService.loginWithSocial(oauthServerType, code, response);
         return ResponseEntity.ok().build();
     }
+
 
 }

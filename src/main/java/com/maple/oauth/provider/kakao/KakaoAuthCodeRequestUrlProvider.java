@@ -1,14 +1,15 @@
-package com.maple.oauth.provider;
+package com.maple.oauth.provider.kakao;
 
 import com.maple.entity.SocialType;
 import com.maple.oauth.config.kakao.KakaoOauthConfig;
+import com.maple.oauth.provider.AuthCodeRequestUrlProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvider{
+public class KakaoAuthCodeRequestUrlProvider implements AuthCodeRequestUrlProvider {
 
     private final KakaoOauthConfig kakaoOauthConfig;
 

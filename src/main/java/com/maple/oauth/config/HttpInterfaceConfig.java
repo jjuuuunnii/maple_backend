@@ -1,5 +1,6 @@
 package com.maple.oauth.config;
 
+import com.maple.oauth.client.google.GoogleApiClient;
 import com.maple.oauth.client.kakao.KakaoApiClient;
 import com.maple.oauth.client.naver.NaverApiClient;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,13 @@ public class HttpInterfaceConfig {
     public NaverApiClient naverApiClient() {
         return createHttpInterface(NaverApiClient.class);
     }
+
+
+    @Bean
+    public GoogleApiClient googleApiClient(){
+        return createHttpInterface(GoogleApiClient.class);}
+
+
     private <T> T createHttpInterface(Class<T> clazz) {
         WebClient webClient = WebClient.create();
         HttpServiceProxyFactory build = HttpServiceProxyFactory
