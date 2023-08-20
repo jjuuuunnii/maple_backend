@@ -22,17 +22,13 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
 
 
     private static final String DEFAULT_LOGIN_PATH = "/api/auth/login/self";
-    private static final String OAUTH_LOGIN_PATH = "/api/auth/login/oauth";
     private static final String CONTENT_TYPE = "application/json";
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
 
     public CustomJsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper, JwtService jwtService, AuthenticationManager authenticationManager) {
-        super(new OrRequestMatcher(
-                new AntPathRequestMatcher(DEFAULT_LOGIN_PATH),
-                new AntPathRequestMatcher(OAUTH_LOGIN_PATH)
-        ));
+        super(DEFAULT_LOGIN_PATH);
         this.objectMapper = objectMapper;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -46,14 +42,10 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
         try {
             log.info("=========================로그인 시도============================");
             UserLoginDto userLoginDto = objectMapper.readValue(request.getInputStream(), UserLoginDto.class);
-            if(request.getRequestURI() == DEFAULT_LOGIN_PATH){
-                return authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword())
-                );
-            }
+
             return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), null)
-            );
+                    new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword()));
+
 
         } catch (IOException e) {
             log.info("=========================로그인 실패============================");

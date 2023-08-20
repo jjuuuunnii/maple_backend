@@ -1,8 +1,6 @@
 package com.maple.oauth.controller;
 
 import com.maple.entity.SocialType;
-import com.maple.entity.User;
-import com.maple.jwt.service.JwtService;
 import com.maple.oauth.service.OauthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +36,8 @@ public class OauthController {
             HttpServletResponse response,
             HttpServletRequest request
     ) {
-        log.info("request header ={} ", request.getRequestURI());
+
+
         oauthService.loginWithSocial(oauthServerType, code, response);
         return ResponseEntity.ok().build();
     }

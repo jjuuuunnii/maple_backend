@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                .requestMatchers("/api/auth/signup/self","/index.html", "/api/testDataInit", "/oauth/login/**").permitAll()
+                .requestMatchers("/api/auth/signup/self","/index.html", "/api/testDataInit", "/oauth/login/**", "/api/auth/login/self").permitAll()
                 .requestMatchers("/oauth/**").permitAll()
                 .anyRequest().authenticated())
 

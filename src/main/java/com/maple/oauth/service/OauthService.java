@@ -8,6 +8,7 @@ import com.maple.oauth.composite.OauthUserClientComposite;
 import com.maple.repository.user.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OauthService {
@@ -44,6 +46,7 @@ public class OauthService {
 
         String accessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType());
         String refreshToken = jwtService.createRefreshToken();
+        log.info("accessToken ={}", accessToken);
         jwtService.updateRefreshToken(user.getEmail(),user.getSocialType(),refreshToken);
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
     }

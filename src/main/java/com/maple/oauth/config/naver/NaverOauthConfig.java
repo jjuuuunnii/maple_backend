@@ -1,4 +1,4 @@
-package com.maple.oauth.config;
+package com.maple.oauth.config.naver;
 
 
 import lombok.AllArgsConstructor;
@@ -16,5 +16,6 @@ public class NaverOauthConfig {
     String redirectUri;
     String clientId;
     String clientSecret;
+    String[] scope;
     String state;
 }

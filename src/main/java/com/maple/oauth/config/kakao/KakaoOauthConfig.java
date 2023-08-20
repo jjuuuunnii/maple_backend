@@ -1,4 +1,4 @@
-package com.maple.oauth.config;
+package com.maple.oauth.config.kakao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

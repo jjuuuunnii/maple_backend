@@ -1,6 +1,7 @@
 package com.maple.oauth.config;
 
 import com.maple.oauth.client.kakao.KakaoApiClient;
+import com.maple.oauth.client.naver.NaverApiClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,7 +16,10 @@ public class HttpInterfaceConfig {
         return createHttpInterface(KakaoApiClient.class);
     }
 
-
+    @Bean
+    public NaverApiClient naverApiClient() {
+        return createHttpInterface(NaverApiClient.class);
+    }
     private <T> T createHttpInterface(Class<T> clazz) {
         WebClient webClient = WebClient.create();
         HttpServiceProxyFactory build = HttpServiceProxyFactory

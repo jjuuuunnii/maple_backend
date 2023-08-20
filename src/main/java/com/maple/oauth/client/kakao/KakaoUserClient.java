@@ -4,7 +4,7 @@ package com.maple.oauth.client.kakao;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.oauth.client.OauthUserClient;
-import com.maple.oauth.config.KakaoOauthConfig;
+import com.maple.oauth.config.kakao.KakaoOauthConfig;
 import com.maple.oauth.dto.kakao.KakaoToken;
 import com.maple.oauth.dto.kakao.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;

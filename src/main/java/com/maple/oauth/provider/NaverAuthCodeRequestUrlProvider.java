@@ -1,7 +1,7 @@
 package com.maple.oauth.provider;
 
 import com.maple.entity.SocialType;
-import com.maple.oauth.config.NaverOauthConfig;
+import com.maple.oauth.config.naver.NaverOauthConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;

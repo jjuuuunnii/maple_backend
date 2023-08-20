@@ -16,6 +16,7 @@ import static com.fasterxml.jackson.databind.PropertyNamingStrategies.*;
 @Setter
 @AllArgsConstructor
 @Slf4j
+@Builder
 @JsonNaming(SnakeCaseStrategy.class)
 public class KakaoUserResponse {
     private Long id;
@@ -30,6 +31,7 @@ public class KakaoUserResponse {
     @Getter
     @Setter
     @AllArgsConstructor
+    @Builder
     @JsonNaming(SnakeCaseStrategy.class)
     public static class KakaoAccount {
         private boolean profileNeedsAgreement;
