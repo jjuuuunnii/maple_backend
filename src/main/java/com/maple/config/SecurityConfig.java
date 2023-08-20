@@ -3,9 +3,6 @@ package com.maple.config;
 import com.maple.exception.jwt.CustomAuthenticationEntryPoint;
 import com.maple.jwt.filter.JwtAuthenticationProcessingFilter;
 import com.maple.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-import com.maple.oauth2.handler.OAuth2LoginFailureHandler;
-import com.maple.oauth2.handler.OAuth2LoginSuccessHandler;
-import com.maple.oauth2.service.CustomOAuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CorsFilter corsFilter;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuthUserService customOAuthUserService;
+
     private final CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter;
     private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -39,29 +34,22 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
+                .requestMatchers("/api/auth/signup/self","/index.html", "/api/testDataInit", "/oauth/login/**").permitAll()
+                .requestMatchers("/oauth/**").permitAll()
+                .anyRequest().authenticated())
 
-                .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                .antMatchers("/api/auth/signup/self","/index.html", "/api/testDataInit", "/api/auth/login/self").permitAll()
-                .anyRequest().authenticated()
-
-                .and()
 
                 .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .authenticationEntryPoint(customAuthenticationEntryPoint);
 
-                .and()
-
-                .oauth2Login()
-                .successHandler(oAuth2LoginSuccessHandler)
-                .failureHandler(oAuth2LoginFailureHandler)
-                .userInfoEndpoint().userService(customOAuthUserService);
 
         http.addFilter(corsFilter);
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter, LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter, CustomJsonUsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+        return http.getOrBuild();
     }
 
 

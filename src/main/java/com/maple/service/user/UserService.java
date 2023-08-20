@@ -14,6 +14,7 @@ import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.consolationLetter.ConsolationLetterRepository;
 import com.maple.repository.letter.LetterRepository;
 import com.maple.repository.user.UserRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +42,7 @@ public class UserService {
     @Transactional
     public void saveUser(UserSignupReqDto userSignupReqDto){
         validateDuplicateEmailAndSocialType(userSignupReqDto.getEmail());
-        User user = User.toEntity(userSignupReqDto.getUserName(), userSignupReqDto.getEmail(), getEncodedPassword(userSignupReqDto));
+        User user = User.toEntity(userSignupReqDto.getUserName(), userSignupReqDto.getEmail(), getEncodedPassword(userSignupReqDto), SocialType.DEFAULT);
         userRepository.save(user);
         log.info("{} 유저 회원가입 완료", user.getEmail());
     }

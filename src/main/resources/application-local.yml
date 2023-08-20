@@ -9,6 +9,20 @@ spring:
     password: maple
     driver-class-name: org.postgresql.Driver
 
+oauth:
+  kakao:
+    client_id: 8885277136e6411f12ac4caee3dbd80a
+    redirect_uri: http://localhost:3000/oauth/redirected/kakao
+    client_secret: ewIcYFnZeHlmYf89dtfdKq2sn7G8DYGD
+    scope: profile_nickname, account_email
+
+  naver:
+    client_id: VdrgQTkuTzW0ZzQ4KRf8
+    redirect_uri: http://localhost:3000/oauth/redirected/naver
+    client_secret: FrehdkhQpq
+    scope: name, email
+    state: alksdjflkqefnkl
+
   security:
     oauth2:
       client:
@@ -17,23 +31,6 @@ spring:
             client-id: 985878687237-cicutlukd65ppl03l9cr1itf38fs66t4.apps.googleusercontent.com
             client-secret: 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
             scope: email, profile
-
-          naver:
-            client-id: VdrgQTkuTzW0ZzQ4KRf8
-            client-secret: FrehdkhQpq
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
-            authorization-grant-type: authorization_code
-            scope: name, email
-            client-name: Naver
-
-          kakao:
-            client-id: 6cd76732b83c309a873e9789558b32cc
-            client-secret: HeqZwFlX6QRnLny2TXgg4S1gA2RtUJ5t
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
-            client-authentication-method: POST
-            authorization-grant-type: authorization_code
-            scope: profile_nickname, account_email
-            client-name: Kakao
 
         provider:
           naver:

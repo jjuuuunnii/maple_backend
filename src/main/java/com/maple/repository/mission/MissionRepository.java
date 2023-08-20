@@ -1,11 +1,9 @@
 package com.maple.repository.mission;
 
 import com.maple.entity.Mission;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import java.lang.reflect.Member;
 import java.util.List;
 
 @Repository

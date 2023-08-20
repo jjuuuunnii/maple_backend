@@ -7,17 +7,16 @@ import com.maple.exception.custom.ErrorCode;
 import com.maple.jwt.service.JwtService;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.repository.user.UserRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -27,7 +26,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String NO_CHECK_URL_LOGIN = "/api/auth/login/self";
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
-    
+    private static final String NO_CHECK_URL_OAUTH_LOGIN = "/oauth/**";
+
+
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
@@ -39,7 +40,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN) || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP) ){
+        if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN) || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP) || request.getRequestURI().contains(NO_CHECK_URL_OAUTH_LOGIN) ){
             filterChain.doFilter(request,response);
             return;
         }
@@ -56,8 +57,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
          * refreshToken 유효한 상태 => refreshToken, accessToken, 둘다 발급해야하는 상태
          */
         if (refreshToken != null) {
-              reIssueAccessTokenAndRefreshToken(refreshToken, response);
-              return;
+            reIssueAccessTokenAndRefreshToken(refreshToken, response);
+            return;
         }
 
         /**
@@ -68,7 +69,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
         }
     }
-
 
     private void reIssueAccessTokenAndRefreshToken(String refreshToken, HttpServletResponse response) {
         userRepository.findByRefreshToken(refreshToken)

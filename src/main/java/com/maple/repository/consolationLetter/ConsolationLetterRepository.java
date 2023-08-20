@@ -1,13 +1,13 @@
 package com.maple.repository.consolationLetter;
 
 import com.maple.entity.ConsolationLetter;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.List;
+
 
 @Repository
 @RequiredArgsConstructor

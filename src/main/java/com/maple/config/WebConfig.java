@@ -8,21 +8,24 @@ import com.maple.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.maple.login.handler.LoginFailedHandler;
 import com.maple.login.handler.LoginSuccessHandler;
 import com.maple.login.service.PrincipalDetailsService;
+import com.maple.oauth.converter.OauthServerTypeConverter;
 import com.maple.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableScheduling
 @RequiredArgsConstructor
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
     private final UserRepository userRepository;
     private final JwtService jwtService;
 
@@ -76,4 +79,8 @@ public class WebConfig {
         return new CustomAuthenticationEntryPoint();
     }
 
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new OauthServerTypeConverter());
+    }
 }

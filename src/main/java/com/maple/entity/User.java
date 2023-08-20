@@ -1,14 +1,13 @@
 package com.maple.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -42,7 +41,6 @@ public class User {
 
     @Enumerated(value = EnumType.STRING)
     private SocialType socialType;  //일반 유저의 경우 null
-    private String socialId;        //일반 유저의 경우 null
     private String refreshToken;
     private String tree;
     private String character;
@@ -54,8 +52,6 @@ public class User {
 
    /* @JsonIgnore
     private static final int START_DAY =30;*/           // TODO 구현 필요
-
-
 
     public User(){}
 
@@ -82,13 +78,13 @@ public class User {
         return letters.size();
     }
 
-    public static User toEntity(String name, String email, String password){
+    public static User toEntity(String name, String email, String password, SocialType socialType){
         User user = User.builder()
                 .name(name)
                 .email(email)
                 .password(password)
                 .missions(new ArrayList<>())
-                .socialType(SocialType.DEFAULT)
+                .socialType(socialType)
                 .build();
 
         for (int nowDate = 1; nowDate <= LAST_DAY; nowDate++) {

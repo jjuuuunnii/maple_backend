@@ -4,11 +4,11 @@ import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 

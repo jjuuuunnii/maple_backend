@@ -13,8 +13,10 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   logging.level:
+    org.springframework.core.LocalVariableTableParameterNameDiscoverer: error
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql: trace
+
 
 
 ---
