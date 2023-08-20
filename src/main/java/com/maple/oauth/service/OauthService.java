@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,23 +31,65 @@ public class OauthService {
 
     @Transactional
     public void loginWithSocial(SocialType socialType, String authCode, HttpServletResponse response) {
-        User user = userRepository.findByEmailAndSocialType(socialType, authCode)
-                .orElseGet(() -> {
-                    User newUser = oauthUserClientComposite.fetch(socialType, authCode);
-                    userRepository.save(newUser);
-                    return newUser;
-                });
+        User user = fetchOrSaveUser(socialType, authCode);
+        authenticateUser(user);
 
-        // 스프링 시큐리티 인증 처리
+        TokenPair tokens = generateTokens(user);
+        saveRefreshToken(user, tokens.getRefreshToken());
+        sendTokensToClient(response, tokens);
+
+        logTokens(tokens);
+    }
+
+    private User fetchOrSaveUser(SocialType socialType, String authCode) {
+        User fetchedUser = oauthUserClientComposite.fetch(socialType, authCode);
+        return userRepository.findBySocialTypeAndSocialId(socialType, fetchedUser.getSocialId())
+                .orElseGet(() -> {
+                    userRepository.save(fetchedUser);
+                    return fetchedUser;
+                });
+    }
+
+    private void authenticateUser(User user) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(user, null, null);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        String accessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType());
-        String refreshToken = jwtService.createRefreshToken();
-        log.info("accessToken ={}", accessToken);
-        jwtService.updateRefreshToken(user.getEmail(),user.getSocialType(),refreshToken);
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
     }
 
+    private TokenPair generateTokens(User user) {
+        String accessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType(), user.getSocialId());
+        String refreshToken = jwtService.createRefreshToken();
+        return new TokenPair(accessToken, refreshToken);
+    }
+
+    private void saveRefreshToken(User user, String refreshToken) {
+        jwtService.updateRefreshToken(user.getSocialId(), user.getSocialType(), refreshToken);
+    }
+
+    private void sendTokensToClient(HttpServletResponse response, TokenPair tokens) {
+        jwtService.sendAccessAndRefreshToken(response, tokens.getAccessToken(), tokens.getRefreshToken());
+    }
+
+    private void logTokens(TokenPair tokens) {
+        log.info("accessToken = {}", tokens.getAccessToken());
+        log.info("refreshToken = {}", tokens.getRefreshToken());
+    }
+
+    private static class TokenPair {
+        private final String accessToken;
+        private final String refreshToken;
+
+        public TokenPair(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+
+        public String getAccessToken() {
+            return accessToken;
+        }
+
+        public String getRefreshToken() {
+            return refreshToken;
+        }
+    }
 }

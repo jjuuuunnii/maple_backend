@@ -20,12 +20,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/kakao/callback")
-    public String redirectKakaoAuth(){
-        log.info("=======================");
-        return "redirect:/oauth2/authorization/kakao";
-    }
-
     @PostMapping("/auth/signup/self")
     public void saveUser(@RequestBody UserSignupReqDto userSignupReqDto) {
         log.info("email = {}", userSignupReqDto.getEmail());

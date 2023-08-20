@@ -35,11 +35,10 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-                .requestMatchers("/api/auth/signup/self","/index.html", "/api/testDataInit", "/oauth/login/**", "/api/auth/login/self").permitAll()
+                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/ts/**","/ttf/**").permitAll()
+                .requestMatchers("/api/auth/signup/self","/api/auth/login/self").permitAll()
                 .requestMatchers("/oauth/**").permitAll()
                 .anyRequest().authenticated())
-
 
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint);

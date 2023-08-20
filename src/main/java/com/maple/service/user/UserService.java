@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -42,7 +43,7 @@ public class UserService {
     @Transactional
     public void saveUser(UserSignupReqDto userSignupReqDto){
         validateDuplicateEmailAndSocialType(userSignupReqDto.getEmail());
-        User user = User.toEntity(userSignupReqDto.getUserName(), userSignupReqDto.getEmail(), getEncodedPassword(userSignupReqDto), SocialType.DEFAULT);
+        User user = User.toEntity(userSignupReqDto.getUserName(), userSignupReqDto.getEmail(), getEncodedPassword(userSignupReqDto), SocialType.DEFAULT, UUID.randomUUID().toString());
         userRepository.save(user);
         log.info("{} 유저 회원가입 완료", user.getEmail());
     }

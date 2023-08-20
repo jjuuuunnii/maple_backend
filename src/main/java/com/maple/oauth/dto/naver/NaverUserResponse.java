@@ -46,7 +46,7 @@ public class NaverUserResponse {
     }
 
     public User toEntity(){
-        return User.toEntity(response.name, response.email, UUID.randomUUID().toString(), SocialType.NAVER);
+        return User.toEntity(response.name, response.email, UUID.randomUUID().toString(), SocialType.NAVER, response.id);
     }
 
 

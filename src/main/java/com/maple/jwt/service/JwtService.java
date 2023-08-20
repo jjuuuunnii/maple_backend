@@ -44,15 +44,17 @@ public class JwtService {
     private static final String EMAIL_CLAIM = "email";
     private static final String SOCIAL_TYPE_CLAIM = "socialType";
     private static final String BEARER = "Bearer ";
+    private static final String SOCIAL_ID_CLAIM = "socialId";
 
     private final UserRepository userRepository;
 
-    public String createAccessToken(String email, SocialType socialType){
+    public String createAccessToken(String email, SocialType socialType, String socialId){
         Date nowDate = new Date();
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(nowDate.getTime() + accessTokenExpirationPeriod))
                 .withClaim(EMAIL_CLAIM, email)
+                .withClaim(SOCIAL_ID_CLAIM, socialId)
                 .withClaim(SOCIAL_TYPE_CLAIM, socialType.toString())
                 .sign(Algorithm.HMAC512(secretKey));
     }
@@ -105,6 +107,20 @@ public class JwtService {
         }
     }
 
+
+    public Optional<String> extractSocialId(String accessToken) {
+        try{
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(accessToken)
+                    .getClaim(SOCIAL_ID_CLAIM)
+                    .asString());
+        }catch(Exception e){
+            log.info("유효하지 않은 엑세스 토큰입니다.");
+            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
+        }
+    }
+
     public Optional<SocialType> extractSocialType(String accessToken){
         try {
             String socialTypeStr = JWT.require(Algorithm.HMAC512(secretKey))
@@ -113,7 +129,7 @@ public class JwtService {
                     .getClaim(SOCIAL_TYPE_CLAIM)
                     .asString();
 
-            return Optional.ofNullable(SocialType.valueOf(socialTypeStr));
+            return Optional.of(SocialType.valueOf(socialTypeStr));
         } catch(Exception e) {
             log.info("유효하지 않은 엑세스 토큰입니다.");
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
@@ -121,8 +137,8 @@ public class JwtService {
     }
 
     @Transactional
-    public void updateRefreshToken(String email, SocialType socialType ,String refreshToken) {
-        User user = userRepository.findByEmailAndSocialType(socialType,email)
+    public void updateRefreshToken(String socialId, SocialType socialType ,String refreshToken) {
+        User user = userRepository.findBySocialTypeAndSocialId(socialType,socialId)
                 .orElseThrow(() -> {throw new AuthenticationException(ErrorCode.USER_NOT_FOUND.getCode()) {};});
 
         user.setRefreshToken(refreshToken);

@@ -24,10 +24,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         User user = principalDetails.getUser();
         String email = user.getEmail();
         SocialType socialType = user.getSocialType();
+        String socialId = user.getSocialId();
 
-        String accessToken = jwtService.createAccessToken(email, socialType);
+        String accessToken = jwtService.createAccessToken(email, socialType, socialId);
         String refreshToken = jwtService.createRefreshToken();
-        jwtService.updateRefreshToken(email, socialType, refreshToken);
+        jwtService.updateRefreshToken(user.getSocialId(), socialType, refreshToken);
         log.info("{} 유저 로그인 성공", user.getEmail());
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);

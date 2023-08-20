@@ -76,6 +76,6 @@ public class KakaoUserResponse {
     }
 
     public User toUser() {
-        return User.toEntity(kakaoAccount.profile.nickname, kakaoAccount.email, UUID.randomUUID().toString(), SocialType.KAKAO);
+        return User.toEntity(kakaoAccount.profile.nickname, kakaoAccount.email, UUID.randomUUID().toString(), SocialType.KAKAO, id.toString());
     }
 }

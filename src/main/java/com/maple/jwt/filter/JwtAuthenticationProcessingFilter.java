@@ -14,9 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.Collections;
 
@@ -35,7 +35,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public JwtAuthenticationProcessingFilter(JwtService jwtService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
-
     }
 
     @Override
@@ -74,9 +73,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(
                         user -> {
-                            String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType());
+                            String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType(), user.getSocialId());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
-                            jwtService.updateRefreshToken(user.getEmail(), user.getSocialType(), reIssuedRefreshToken);
+                            jwtService.updateRefreshToken(user.getSocialId(), user.getSocialType(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
                         }
 
@@ -87,9 +86,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private void checkAccessTokenAndAuthentication(HttpServletRequest request) {
         jwtService.extractAccessToken(request)
                 .ifPresent(accessToken -> {
-                            String email = jwtService.extractEmail(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+                            String socialId = jwtService.extractSocialId(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
                             SocialType socialType = jwtService.extractSocialType(accessToken).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-                            userRepository.findByEmailAndSocialType(socialType, email)
+                            userRepository.findBySocialTypeAndSocialId(socialType, socialId)
                                     .ifPresent(
                                             this::saveAuthentication
                                     );

@@ -41,6 +41,7 @@ public class User {
 
     @Enumerated(value = EnumType.STRING)
     private SocialType socialType;  //일반 유저의 경우 null
+    private String socialId;
     private String refreshToken;
     private String tree;
     private String character;
@@ -78,12 +79,13 @@ public class User {
         return letters.size();
     }
 
-    public static User toEntity(String name, String email, String password, SocialType socialType){
+    public static User toEntity(String name, String email, String password, SocialType socialType, String socialId){
         User user = User.builder()
                 .name(name)
                 .email(email)
                 .password(password)
                 .missions(new ArrayList<>())
+                .socialId(socialId)
                 .socialType(socialType)
                 .build();
 
