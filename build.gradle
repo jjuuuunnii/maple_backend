@@ -40,10 +40,6 @@ compileJava {
 	options.compilerArgs << '-parameters'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 processResources.dependsOn('copySecret')
 
 tasks.register('copySecret', Copy) {
