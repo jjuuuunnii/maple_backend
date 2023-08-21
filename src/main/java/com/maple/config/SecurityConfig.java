@@ -35,7 +35,8 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/ts/**","/ttf/**").permitAll()
+                .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico",
+                        "/ts/**","/ttf/**").permitAll()
                 .requestMatchers("/api/auth/signup/self","/api/auth/login/self").permitAll()
                 .requestMatchers("/oauth/**").permitAll()
                 .anyRequest().authenticated())
@@ -46,7 +47,8 @@ public class SecurityConfig {
 
         http.addFilter(corsFilter);
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter, LogoutFilter.class);
-        http.addFilterBefore(jwtAuthenticationProcessingFilter, CustomJsonUsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationProcessingFilter,
+                CustomJsonUsernamePasswordAuthenticationFilter.class);
 
         return http.getOrBuild();
     }

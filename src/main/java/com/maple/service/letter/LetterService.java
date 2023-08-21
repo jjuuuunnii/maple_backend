@@ -54,15 +54,13 @@ public class LetterService {
 
         /**
          *
-         * TODO
+         * TODO 시간 제한 필요!!!
          */
         if (missionService.checkWordInLetter(content, user.getTimeFromSignup()) ||
                 missionService.checkLetterCount(user.letterCnt(), user.getTimeFromSignup()) ||
                 missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
             user.setTodayMissionStatus(true);
         }
-
-
         letterRepository.save(letter);
     }
 

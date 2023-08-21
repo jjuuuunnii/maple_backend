@@ -11,9 +11,9 @@ spring:
 
 oauth:
   kakao:
-    client_id: 8885277136e6411f12ac4caee3dbd80a
+    client_id: 6cd76732b83c309a873e9789558b32cc
     redirect_uri: http://localhost:3000/oauth/redirected/kakao
-    client_secret: ewIcYFnZeHlmYf89dtfdKq2sn7G8DYGD
+    client_secret: HeqZwFlX6QRnLny2TXgg4S1gA2RtUJ5t
     scope: profile_nickname, account_email
 
   naver:
