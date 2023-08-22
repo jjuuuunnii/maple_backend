@@ -54,7 +54,7 @@ sourceSets {
 
 processResources { dependsOn "copySecretFrontend" }
 
-task installReact(type: Exec) {
+/*task installReact(type: Exec) {
 	workingDir "$frontendDir"
 	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
@@ -74,7 +74,7 @@ task buildReact(type: Exec) {
 	} else {
 		commandLine "npm", "run", "build"
 	}
-}
+}*/
 
 
 processResources.dependsOn('copySecretAppYml', 'copySecretFrontend')
@@ -94,7 +94,7 @@ task copySecretAppYml(type: Copy) {
 
 
 task copySecretFrontend(type: Copy) {
-	dependsOn "buildReact"
+	/*dependsOn "buildReact"*/
 	from "$frontendDir/dist"
 	into "$projectDir/src/main/resources/static"
 }
