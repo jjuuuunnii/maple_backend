@@ -51,6 +51,7 @@ sourceSets {
 	}
 }
 
+
 processResources { dependsOn "copySecretFrontend" }
 
 task installReact(type: Exec) {
@@ -98,5 +99,6 @@ task copySecretFrontend(type: Copy) {
 	into "$projectDir/src/main/resources/static"
 }
 
+assemble.dependsOn buildReact
 
 
