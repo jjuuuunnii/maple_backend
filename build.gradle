@@ -99,6 +99,6 @@ task copySecretFrontend(type: Copy) {
 	into "$projectDir/src/main/resources/static"
 }
 
-assemble.dependsOn buildReact
+//assemble.dependsOn buildReact
 
 
