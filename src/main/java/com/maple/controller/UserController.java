@@ -7,6 +7,7 @@ import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.entity.User;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public UserInfoResDto getUserInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public UserInfoResDto getUserInfo(HttpServletRequest request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return userService.getUserInfo(principalDetails.getUser().getId());
     }
 

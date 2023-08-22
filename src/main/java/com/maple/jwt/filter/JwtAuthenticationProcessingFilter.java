@@ -39,7 +39,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN) || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP) || request.getRequestURI().contains(NO_CHECK_URL_OAUTH_LOGIN) ){
+        if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN)
+                || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP)
+                || request.getRequestURI().contains(NO_CHECK_URL_OAUTH_LOGIN)){
             filterChain.doFilter(request,response);
             return;
         }
@@ -50,7 +52,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
-        log.info("refresh Token = {}", refreshToken);
 
         /**
          * refreshToken 유효한 상태 => refreshToken, accessToken, 둘다 발급해야하는 상태

@@ -4,4 +4,4 @@
 
 [submodule "frontend"]
 	path = frontend
-	url = https://github.com/minseong0324/Clipper_Project_Frontend.git
+	url = git@github.com:minseong0324/Clipper_Project_Frontend.git

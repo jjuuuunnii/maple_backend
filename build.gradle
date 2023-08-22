@@ -40,60 +40,63 @@ compileJava {
 	options.compilerArgs << '-parameters'
 }
 
-processResources.dependsOn('copySecret')
-
-tasks.register('copySecret', Copy) {
-	from './secure-submodule-test' // 서브모듈 디렉토리 경로
-	include "application*.yml"  // 복사할 파일들
-	into 'src/main/resources'  // 복사 위치
-}
+def frontendDir = "$projectDir/frontend"
 
 
-/*
-
-def reactDir = "$projectDir/src/main/webapp/frontend";
-
-sourceSets{
-	main{
-		resources{
+sourceSets {
+	main {
+		resources {
 			srcDirs = ["$projectDir/src/main/resources"]
 		}
 	}
 }
 
-processResources{
-	dependsOn "copyReactBuildFiles"
-}
+processResources { dependsOn "copySecretFrontend" }
 
-task installReact(type:Exec){
-	workingDir "$reactDir"
-	inputs.dir "$reactDir"
+task installReact(type: Exec) {
+	workingDir "$frontendDir"
+	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
-
-	if(System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')){
-		commandLine "npm.cmd", "audit", "fix"
-		commandLine 'npm.cmd', 'install'
-	}else{
-		commandLine "npm", "audit", "fix"
-		commandLine 'npm', 'install'
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine "npm.cmd", "install"
+	} else {
+		commandLine "npm", "install"
 	}
 }
 
-task buildReact(type:Exec){
+task buildReact(type: Exec) {
 	dependsOn "installReact"
-	workingDir "$reactDir"
-	inputs.dir "$reactDir"
+	workingDir "$frontendDir"
+	inputs.dir "$frontendDir"
 	group = BasePlugin.BUILD_GROUP
-
-	if(System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')){
-		commandLine "npm.cmd", "run-script", "build"
-	}else{
-		commandLine "npm", "run-script", "build"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine "npm.cmd", "run", "build"
+	} else {
+		commandLine "npm", "run", "build"
 	}
 }
 
-task copyReactBuildFiles(type:Copy){
+processResources.dependsOn('copySecretAppYml', 'copySecretFrontend')
+
+task cleanAppYml(type: Delete) {
+	delete fileTree('src/main/resources') {
+		include 'application*.yml'
+	}
+}
+
+task copySecretAppYml(type: Copy) {
+	dependsOn cleanAppYml
+	from './secure-submodule-test'
+	include 'application*.yml'
+	into 'src/main/resources'
+}
+
+
+task copySecretFrontend(type: Copy) {
 	dependsOn "buildReact"
-	from "$reactDir/build"
+	from "$frontendDir/dist"
 	into "$projectDir/src/main/resources/static"
-}*/
+}
+
+
+
