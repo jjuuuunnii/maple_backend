@@ -35,7 +35,6 @@ public class OauthUserClientComposite{
     }
 
     private OauthUserClient getClient(SocialType socialType){
-        log.info("socialType = {}", socialType.toString());
         return Optional.ofNullable(mapping.get(socialType))
                 .orElseThrow(() -> new RuntimeException("지원하지 않는 소셜 타입입니다"));
     }

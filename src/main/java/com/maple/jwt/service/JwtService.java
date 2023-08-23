@@ -94,7 +94,7 @@ public class JwtService {
                 .map(refreshToken -> refreshToken.replace(BEARER,""));
     }
 
-    public Optional<String> extractEmail(String accessToken){
+/*    public Optional<String> extractEmail(String accessToken){
         try{
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
@@ -105,7 +105,7 @@ public class JwtService {
             log.info("유효하지 않은 엑세스 토큰입니다.");
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
-    }
+    }*/
 
 
     public Optional<String> extractSocialId(String accessToken) {

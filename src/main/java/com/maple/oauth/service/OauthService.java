@@ -38,7 +38,7 @@ public class OauthService {
         saveRefreshToken(user, tokens.getRefreshToken());
         sendTokensToClient(response, tokens);
 
-        logTokens(tokens);
+//        logTokens(tokens);
     }
 
     private User fetchOrSaveUser(SocialType socialType, String authCode) {
@@ -70,10 +70,10 @@ public class OauthService {
         jwtService.sendAccessAndRefreshToken(response, tokens.getAccessToken(), tokens.getRefreshToken());
     }
 
-    private void logTokens(TokenPair tokens) {
+   /* private void logTokens(TokenPair tokens) {
         log.info("accessToken = {}", tokens.getAccessToken());
         log.info("refreshToken = {}", tokens.getRefreshToken());
-    }
+    }*/
 
     private static class TokenPair {
         private final String accessToken;

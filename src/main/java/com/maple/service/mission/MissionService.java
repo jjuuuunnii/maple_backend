@@ -50,7 +50,6 @@ public class MissionService {
                     missions.sort(Comparator.comparing(Mission::getId));
                     List<Boolean> missionStatuses = new ArrayList<>();
                     for (Mission mission : missions) {
-                        log.info("mission = {}", mission.getId());
                         missionStatuses.add(mission.isMissionStatus());
                     }
 

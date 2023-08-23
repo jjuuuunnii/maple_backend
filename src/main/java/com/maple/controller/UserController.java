@@ -23,14 +23,11 @@ public class UserController {
 
     @PostMapping("/auth/signup/self")
     public void saveUser(@RequestBody UserSignupReqDto userSignupReqDto) {
-        log.info("email = {}", userSignupReqDto.getEmail());
-        log.info("userName ={}", userSignupReqDto.getUserName());
-        log.info("password = {}", userSignupReqDto.getPassword());
         userService.saveUser(userSignupReqDto);
     }
 
     @GetMapping("/users")
-    public UserInfoResDto getUserInfo(HttpServletRequest request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public UserInfoResDto getUserInfo(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         return userService.getUserInfo(principalDetails.getUser().getId());
     }
 
