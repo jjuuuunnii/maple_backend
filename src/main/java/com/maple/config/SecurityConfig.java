@@ -35,11 +35,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("","/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/png/**",
-                        "/ts/**","/ttf/**","/index.html","/assets/**").permitAll()
                         .requestMatchers("/api/auth/signup/self","/api/auth/login/self","/api/users/{userId}").permitAll()
-                        .requestMatchers("", "/","/home/{userId}","/login", "/select-character-tree/{userId}",
-                                "/kakao/callback", "/naver/callback", "/google/callback", "/mypage/{userId}").permitAll()
                         .requestMatchers("/oauth/**", "/.well-known/**").permitAll()
                         .anyRequest().authenticated())
 

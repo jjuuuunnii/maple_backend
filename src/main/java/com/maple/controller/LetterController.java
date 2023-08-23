@@ -32,22 +32,4 @@ public class LetterController {
         return letterService.getLetterInfo(userId, selectedDate);
     }
 
-    @PostMapping("/auth/login/kakao")
-    public String redirectToKakaoAuth(){
-        log.info("Kakao");
-        return "redirect:/oauth2/authorization/kakao";
-    }
-
-    @PostMapping("/auth/login/naver")
-    public String redirectToNaverAuth(){
-        log.info("naver");
-        return "redirect:/oauth2/authorization/naver";
-    }
-    @PostMapping("/auth/login/google")
-    public String redirectToGoogleAuth(){
-        log.info("google");
-        return "redirect:/oauth2/authorization/google";
-    }
-
-
 }

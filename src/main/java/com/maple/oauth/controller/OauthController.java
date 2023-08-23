@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/oauth")
+@RequestMapping("/api/oauth")
 @RestController
 public class OauthController {
 

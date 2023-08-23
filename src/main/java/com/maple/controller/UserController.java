@@ -29,12 +29,6 @@ public class UserController {
         userService.saveUser(userSignupReqDto);
     }
 
-    @GetMapping("/test")
-    public void test(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        User user = principalDetails.getUser();
-        log.info("name = {} , email = {} ", user.getName(), user.getEmail());
-    }
-
     @GetMapping("/users")
     public UserInfoResDto getUserInfo(HttpServletRequest request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return userService.getUserInfo(principalDetails.getUser().getId());
