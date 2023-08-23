@@ -61,7 +61,7 @@ task cleanAppYml(type: Delete) {
 task copySecretAppYml(type: Copy) {
 	dependsOn cleanAppYml
 	from './secure-submodule-test'
-	include 'application*.yml'
+	include 'application*.yml', 'keystore.p12'
 	into 'src/main/resources'
 }
 
