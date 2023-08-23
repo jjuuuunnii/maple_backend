@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/signup/self","/api/auth/login/self","/api/users/{userId}").permitAll()
                         .requestMatchers("", "/","/home/{userId}","/login", "/select-character-tree/{userId}",
                                 "/kakao/callback", "/naver/callback", "/google/callback", "/mypage/{userId}").permitAll()
-                        .requestMatchers("/oauth/**").permitAll()
+                        .requestMatchers("/oauth/**", "/.well-known/**").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling()

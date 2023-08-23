@@ -36,11 +36,9 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
-compileJava {
-	options.compilerArgs << '-parameters'
-}
-
-def frontendDir = "$projectDir/frontend"
+//compileJava {
+//	options.compilerArgs << '-parameters'
+//}
 
 
 sourceSets {
@@ -52,32 +50,7 @@ sourceSets {
 }
 
 
-processResources { dependsOn "copySecretFrontend" }
-
-/*task installReact(type: Exec) {
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "install"
-	} else {
-		commandLine "npm", "install"
-	}
-}
-
-task buildReact(type: Exec) {
-	workingDir "$frontendDir"
-	inputs.dir "$frontendDir"
-	group = BasePlugin.BUILD_GROUP
-	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine "npm.cmd", "run", "build"
-	} else {
-		commandLine "npm", "run", "build"
-	}
-}*/
-
-
-processResources.dependsOn('copySecretAppYml', 'copySecretFrontend')
+processResources.dependsOn('copySecretAppYml')
 
 task cleanAppYml(type: Delete) {
 	delete fileTree('src/main/resources') {
@@ -93,12 +66,6 @@ task copySecretAppYml(type: Copy) {
 }
 
 
-task copySecretFrontend(type: Copy) {
-	/*dependsOn "buildReact"*/
-	from "$frontendDir/dist"
-	into "$projectDir/src/main/resources/static"
-}
 
-//assemble.dependsOn buildReact
 
 

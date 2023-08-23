@@ -2,6 +2,3 @@
 	path = secure-submodule-test
 	url = git@github.com:jjuuuunnii/secure-submodule-test.git
 
-[submodule "frontend"]
-	path = frontend
-	url = git@github.com:minseong0324/Clipper_Project_Frontend.git
