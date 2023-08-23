@@ -38,7 +38,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder; // 비밀번호 인코딩을 위한 인스턴스
     private final ConsolationLetterRepository consolationLetterRepository;
     private final LetterRepository letterRepository;
-    private final EntityManager entityManager;
+
 
     @Transactional
     public void saveUser(UserSignupReqDto userSignupReqDto){
