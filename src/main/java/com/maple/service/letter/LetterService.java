@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,11 +47,14 @@ public class LetterService {
                 .senderName(letterSaveReqDto.getSenderName())
                 .content(letterSaveReqDto.getLetterContent())
                 .createdAt(user.getTimeFromSignup())
-                .localDateTime(LocalDateTime.now())
+                .localDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
         letter.setLetterUser(user);
 
         String content = letter.getSenderName()+" "+letter.getContent();
+        log.info("편지 시간, now() = {}", LocalDateTime.now());
+        log.info("편지 시간, ZoneId.of(\"Asia/Seoul\")) = {} ", LocalDateTime.now());
+
 
         /**
          *
