@@ -26,7 +26,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private static final String NO_CHECK_URL_LOGIN = "/api/auth/login/self";
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
-    private static final String NO_CHECK_URL_OAUTH_LOGIN = "/oauth/**";
+    private static final String NO_CHECK_URL_OAUTH_LOGIN = "/api/oauth/**";
 
 
     private final JwtService jwtService;
