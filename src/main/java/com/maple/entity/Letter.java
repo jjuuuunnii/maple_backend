@@ -29,7 +29,7 @@ public class Letter {
     private LocalDateTime localDateTime;  // 유저가 받은 편지의 시간
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public void setLetterUser(User user){
