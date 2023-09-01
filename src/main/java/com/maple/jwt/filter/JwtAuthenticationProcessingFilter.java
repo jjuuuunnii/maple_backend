@@ -78,6 +78,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
                             jwtService.updateRefreshToken(user.getSocialId(), user.getSocialType(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
+                            saveAuthentication(user);
                         }
 
                 );

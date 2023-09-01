@@ -18,7 +18,6 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
 
-
     /**
      * TODO 서버가 닫힐때, 30일이 이하로 남아있을때의 구현이 필요합니다!!!!!
      */
@@ -94,9 +93,11 @@ public class User {
                     .missionStatus(false)
                     .nowDate(nowDate)
                     .build();
+
             user.getMissions().add(mission);
             mission.setUser(user);
         }
+
         user.setDefaultTreeAndCharacter();
         user.timeFromSignup = 1;
         return user;

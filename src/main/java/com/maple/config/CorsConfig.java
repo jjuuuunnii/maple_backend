@@ -13,17 +13,19 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter(){
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://www.maplemailbox.com", "https://maplemailbox.com"));
-
+        configuration.addAllowedOrigin("https://www.maplemailbox.com");
+        configuration.addAllowedOrigin("https://maplemailbox.com");
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("PUT");
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
         configuration.addExposedHeader("authorization");
         configuration.addExposedHeader("reauthorization");
-        source.registerCorsConfiguration("/**", configuration);
-
 
         return new CorsFilter(source);
     }
