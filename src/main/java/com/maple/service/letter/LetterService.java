@@ -71,7 +71,6 @@ public class LetterService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
 
-        LetterCountDto letterCountDto = new LetterCountDto();
         Map<Integer, Long> countByDate = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
                 .orElse(Collections.emptyList())
                 .stream()

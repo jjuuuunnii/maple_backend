@@ -2,6 +2,7 @@ package com.maple.repository.letter;
 import com.maple.dto.letter.LetterCountDto;
 import com.maple.entity.Letter;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -36,10 +37,11 @@ public class LetterRepository {
 
     @Transactional(readOnly = true)
     public Optional<List<LetterCountDto>> countAllLettersByDateUntilNowDate(Long userId) {
-        List<Object[]> resultList = em.createQuery("select l.createdAt, count(l) from Letter l where l.user.id =: userId and l.createdAt <= :nowDate group by l.createdAt")
-                .setParameter("userId", userId)
-                .setParameter("nowDate", 30)
-                .getResultList();
+        TypedQuery<Object[]> query = em.createQuery("select l.createdAt, count(l) from Letter l where l.user.id =: userId and l.createdAt <= :nowDate group by l.createdAt", Object[].class);
+        query.setParameter("userId", userId);
+        query.setParameter("nowDate", 30);
+
+        List<Object[]> resultList = query.getResultList();
 
         List<LetterCountDto> dtoList = resultList.stream()
                 .map(objArr -> new LetterCountDto(((Number) objArr[0]).intValue(), (Long) objArr[1]))
@@ -52,10 +54,11 @@ public class LetterRepository {
 
 
 
+
     public List<Letter> findByUserIdAndSelectedDate(Long userId, int selectedDate) {
-        return em.createQuery("select l from Letter l where l.user.id =: userId And l.createdAt =: selectedDate")
-                .setParameter("userId", userId)
-                .setParameter("selectedDate", selectedDate)
-                .getResultList();
+        TypedQuery<Letter> query = em.createQuery("select l from Letter l where l.user.id =: userId And l.createdAt =: selectedDate", Letter.class);
+        query.setParameter("userId", userId);
+        query.setParameter("selectedDate", selectedDate);
+        return query.getResultList();
     }
 }
