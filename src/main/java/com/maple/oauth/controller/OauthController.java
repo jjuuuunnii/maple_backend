@@ -30,7 +30,7 @@ public class OauthController {
 
     @GetMapping("/login/{oauthServerType}")
     public ResponseEntity<Void> login(
-            @PathVariable SocialType oauthServerType,
+            @PathVariable("oauthServerType") SocialType oauthServerType,
             @RequestParam("code") String code,
             HttpServletResponse response
     ) {

@@ -3,6 +3,7 @@ package com.maple.oauth.service;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.jwt.service.JwtService;
+import com.maple.login.service.PrincipalDetails;
 import com.maple.oauth.composite.AuthCodeRequestUrlProviderComposite;
 import com.maple.oauth.composite.OauthUserClientComposite;
 import com.maple.repository.user.UserRepository;
@@ -51,8 +52,9 @@ public class OauthService {
     }
 
     private void authenticateUser(User user) {
+        PrincipalDetails principalDetails = new PrincipalDetails(user);
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user, null, null);
+                new UsernamePasswordAuthenticationToken(principalDetails, null, null);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
@@ -63,7 +65,7 @@ public class OauthService {
     }
 
     private void saveRefreshToken(User user, String refreshToken) {
-        jwtService.updateRefreshToken(user.getSocialId(), user.getSocialType(), refreshToken);
+        jwtService.updateRefreshToken(user.getSocialId(), refreshToken);
     }
 
     private void sendTokensToClient(HttpServletResponse response, TokenPair tokens) {

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
+import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -137,9 +138,9 @@ public class JwtService {
     }
 
     @Transactional
-    public void updateRefreshToken(String socialId, SocialType socialType ,String refreshToken) {
-        User user = userRepository.findBySocialTypeAndSocialId(socialType,socialId)
-                .orElseThrow(() -> {throw new AuthenticationException(ErrorCode.USER_NOT_FOUND.getCode()) {};});
+    public void updateRefreshToken(String socialId,String refreshToken) {
+        User user = userRepository.findBySocialId(socialId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         user.setRefreshToken(refreshToken);
     }

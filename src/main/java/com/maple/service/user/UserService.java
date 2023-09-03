@@ -30,7 +30,6 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -54,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 43 1 * * ?")
     public void updateTimeFromSignup() {
         int pageSize = 100;
         int pageNumber = 0;
@@ -63,12 +62,8 @@ public class UserService {
         do {
             users = userRepository.findAllWithPaging(pageNumber, pageSize);
             users.forEach(user -> {
-                if(!user.isLettersOverFive()){
-
-                }
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
                 user.setTodayMissionStatus(false);
-
             });
             pageNumber++;
         } while (!users.isEmpty());

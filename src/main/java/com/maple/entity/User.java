@@ -115,7 +115,9 @@ public class User {
         if (now.isAfter(daysLeft30) && now.isBefore(endDate)) {
             long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(daysLeft30, now);
             user.setTimeFromSignup((int) daysBetween + 1);
+            return;
         }
+        user.setTimeFromSignup(1);
     }
 
 

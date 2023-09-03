@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -70,13 +71,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
     }
 
-    private void reIssueAccessTokenAndRefreshToken(String refreshToken, HttpServletResponse response) {
+
+    public void reIssueAccessTokenAndRefreshToken(String refreshToken, HttpServletResponse response) {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(
                         user -> {
                             String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType(), user.getSocialId());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
-                            jwtService.updateRefreshToken(user.getSocialId(), user.getSocialType(), reIssuedRefreshToken);
+                            jwtService.updateRefreshToken(user.getSocialId(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
                             saveAuthentication(user);
                         }
