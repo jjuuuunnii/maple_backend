@@ -66,6 +66,17 @@ public class UserRepository {
                 .getResultList();
     }
 
+
+    public Optional<User> findBySocialId(String socialId) {
+        try {
+            User user = (User) em.createQuery("select u from User u where u.socialId = :socialId")
+                    .setParameter("socialId", socialId)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
     public Optional<User> findBySocialTypeAndSocialId(SocialType socialType, String socialId) {
         try {
             User user = (User) em.createQuery("select u from User u where u.socialType = :socialType and u.socialId = :socialId")

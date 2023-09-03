@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -50,6 +51,11 @@ public class User {
     @JsonIgnore
     private static final int LAST_DAY =30;
 
+    @JsonIgnore
+    private static final LocalDateTime endDate = LocalDateTime.of(2023, 11, 15, 0, 0);
+
+    @JsonIgnore
+    private static final LocalDateTime daysLeft30 = LocalDateTime.of(2023, 10, 16, 0, 0);
    /* @JsonIgnore
     private static final int START_DAY =30;*/           // TODO 구현 필요
 
@@ -99,9 +105,19 @@ public class User {
         }
 
         user.setDefaultTreeAndCharacter();
-        user.timeFromSignup = 1;
+        checkSignupTimeAndSaveTimeFromSignup(user);
         return user;
     }
+
+    private static void checkSignupTimeAndSaveTimeFromSignup(User user) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(daysLeft30) && now.isBefore(endDate)) {
+            long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(daysLeft30, now);
+            user.setTimeFromSignup((int) daysBetween + 1);
+        }
+    }
+
 
 }
 

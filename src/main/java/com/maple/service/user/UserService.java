@@ -63,8 +63,12 @@ public class UserService {
         do {
             users = userRepository.findAllWithPaging(pageNumber, pageSize);
             users.forEach(user -> {
+                if(!user.isLettersOverFive()){
+
+                }
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
                 user.setTodayMissionStatus(false);
+
             });
             pageNumber++;
         } while (!users.isEmpty());
@@ -81,20 +85,20 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         return UserInfoResDto.builder()
-                .userId(user.getId().toString())
+                .userId(user.getSocialId())
                 .userName(user.getName())
                 .build();
     }
 
     @Transactional(readOnly = true)
-    public OwnerHomeResDto getOwnerHome(Long userId) {
+    public OwnerHomeResDto getOwnerHome(String socialId) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findBySocialId(socialId)
                 .orElseThrow(() -> {
                     throw new CustomException(ErrorCode.USER_NOT_FOUND);
                 });
 
-        List<LetterCountDto> letterCounts = letterRepository.countAllLettersByDateUntilNowDate(userId)
+        List<LetterCountDto> letterCounts = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
                 .orElse(Collections.emptyList());
 
         List<Boolean> lettersOverFive = new ArrayList<>();
@@ -122,8 +126,8 @@ public class UserService {
 
 
     @Transactional
-    public void saveUserTreeAndCharacter(Long userId, UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
+    public void saveUserTreeAndCharacter(String socialId, UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
 
@@ -134,12 +138,15 @@ public class UserService {
     }
 
     @Transactional
-    public void leaveUser(Long userId) {
-        userRepository.deleteById(userId);
+    public void leaveUser(String socialId) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        });
+        userRepository.deleteById(user.getId());
     }
     @Transactional
-    public void logout(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
+    public void logout(String socialId) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         user.setRefreshToken(null);
@@ -147,7 +154,6 @@ public class UserService {
 
     @Transactional
     public void saveTestData() {
-
 
         for (int i = 1; i <= 30; i++) {
             ConsolationLetter letter = ConsolationLetter.builder()

@@ -38,8 +38,8 @@ public class LetterService {
     private final MissionService missionService;
 
     @Transactional
-    public void saveLetter(Long userId, LetterSaveReqDto letterSaveReqDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
+    public void saveLetter(String socialId, LetterSaveReqDto letterSaveReqDto) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
 
@@ -47,14 +47,11 @@ public class LetterService {
                 .senderName(letterSaveReqDto.getSenderName())
                 .content(letterSaveReqDto.getLetterContent())
                 .createdAt(user.getTimeFromSignup())
-                .localDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .localDateTime(LocalDateTime.now())
                 .build();
         letter.setLetterUser(user);
 
         String content = letter.getSenderName()+" "+letter.getContent();
-        log.info("편지 시간, now() = {}", LocalDateTime.now());
-        log.info("편지 시간, ZoneId.of(\"Asia/Seoul\")) = {} ", LocalDateTime.now());
-
 
         /**
          *
@@ -69,13 +66,13 @@ public class LetterService {
     }
 
 
-    public LetterListResDto getLetterList(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
+    public LetterListResDto getLetterList(String socialId) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
 
         LetterCountDto letterCountDto = new LetterCountDto();
-        Map<Integer, Long> countByDate = letterRepository.countAllLettersByDateUntilNowDate(userId)
+        Map<Integer, Long> countByDate = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
                 .orElse(Collections.emptyList())
                 .stream()
                 .collect(Collectors.toMap(LetterCountDto::getCreatedAt, LetterCountDto::getCount));
@@ -98,19 +95,34 @@ public class LetterService {
                 .build();
     }
 
-    public List<LetterInfoResDto> getLetterInfo(Long userId, int selectedDate) {
-        List<Letter> letters = letterRepository.findByUserIdAndSelectedDate(userId, selectedDate);
+    @Transactional(readOnly = true)
+    public List<LetterInfoResDto> getLetterInfo(String socialId, int selectedDate) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (letters.size() < 5) {
+        List<Letter> letters = letterRepository.findByUserIdAndSelectedDate(user.getId(), selectedDate);
+        List<LetterInfoResDto> letterInfoResDtos = new ArrayList<>();
+
+
+        if (!user.isLettersOverFive()) {
             ConsolationLetter consolationLetter = consolationLetterRepository.findByNowDate(selectedDate);
-            LetterInfoResDto consolationDto = LetterInfoResDto.builder()
-                    .senderName(consolationLetter.getSenderName())
-                    .letterContent(consolationLetter.getContent())
-                    .build();
+            letterInfoResDtos.add(
+                    LetterInfoResDto.builder()
+                            .senderName(consolationLetter.getSenderName())
+                            .letterContent(consolationLetter.getContent())
+                            .build()
+            );
 
-            List<LetterInfoResDto> consolationList = new ArrayList<>();
-            consolationList.add(consolationDto);
-            return consolationList;
+            if (user.getTimeFromSignup() == 31) {
+                letterInfoResDtos.addAll(
+                        letters.stream()
+                                .map(letter -> LetterInfoResDto.builder()
+                                        .senderName(letter.getSenderName())
+                                        .letterContent(letter.getContent())
+                                        .build())
+                                .toList()
+                );
+            }
+            return letterInfoResDtos;
         }
 
         return letters.stream()
@@ -120,6 +132,7 @@ public class LetterService {
                         .build())
                 .collect(Collectors.toList());
     }
+
 
 
 }

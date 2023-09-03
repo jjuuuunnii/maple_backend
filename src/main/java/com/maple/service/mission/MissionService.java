@@ -29,10 +29,10 @@ public class MissionService {
 
 
     @Transactional
-    public void setMissionStatus(Boolean status, Long userId, int nowDate) {
-        userRepository.findById(userId).ifPresentOrElse(
+    public void setMissionStatus(Boolean status, String socialId, int nowDate) {
+        userRepository.findBySocialId(socialId).ifPresentOrElse(
                 user -> {
-                    missionRepository.saveMissionStatusWithNowDateAndStatus(status, nowDate, userId);
+                    missionRepository.saveMissionStatusWithNowDateAndStatus(status, nowDate, socialId);
                     user.setTodayMissionStatus(true);
                 },
                 () -> {
@@ -42,10 +42,10 @@ public class MissionService {
     }
 
     @Transactional(readOnly = true)
-    public StampStatusListResDto getStampStatus(Long userId) {
-        return userRepository.findById(userId).map(
+    public StampStatusListResDto getStampStatus(String socialId) {
+        return userRepository.findBySocialId(socialId).map(
                 user -> {
-                    List<Mission> missions = missionRepository.findMissionByUserId(userId);
+                    List<Mission> missions = missionRepository.findMissionByUserId(user.getId());
 
                     missions.sort(Comparator.comparing(Mission::getId));
                     List<Boolean> missionStatuses = new ArrayList<>();
@@ -62,8 +62,8 @@ public class MissionService {
 
 
     @Transactional(readOnly = true)
-    public TodayMissionStatusResDto getTodayMissionStatus(Long userId) {
-        return userRepository.findById(userId)
+    public TodayMissionStatusResDto getTodayMissionStatus(String socialId) {
+        return userRepository.findBySocialId(socialId)
                 .map(user -> TodayMissionStatusResDto.builder()
                         .missionComplete(user.isTodayMissionStatus())
                         .build())
@@ -108,11 +108,11 @@ public class MissionService {
 
 
     @Transactional
-    public boolean setTodayStamp(Long userId, boolean status) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
+    public boolean setTodayStamp(String socialId, boolean status) {
+        User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
-        missionRepository.saveMissionStatusWithNowDateAndStatus(status, user.getTimeFromSignup(), userId);
-        return missionRepository.findMissionByUserIdAndNowDate(userId, user.getTimeFromSignup()).isMissionStatus();
+        missionRepository.saveMissionStatusWithNowDateAndStatus(status, user.getTimeFromSignup(), socialId);
+        return missionRepository.findMissionByUserIdAndNowDate(user.getId(), user.getTimeFromSignup()).isMissionStatus();
     }
 }

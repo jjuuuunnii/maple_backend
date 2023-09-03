@@ -1,13 +1,11 @@
 package com.maple.controller;
 
+import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
-import com.maple.dto.user.req.UserSignupReqDto;
-import com.maple.entity.User;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.service.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,24 +29,25 @@ public class UserController {
         return userService.getUserInfo(principalDetails.getUser().getId());
     }
 
-    @GetMapping("/users/{userId}")
-    public OwnerHomeResDto getOwnerHome(@PathVariable Long userId){
-        return userService.getOwnerHome(userId);
+    @GetMapping("/users/{socialId}")
+    public OwnerHomeResDto getOwnerHome(@PathVariable String socialId){
+
+        return userService.getOwnerHome(socialId);
     }
 
-    @PutMapping("/users/{userId}")
-    public void saveTreeAndCharacter(@PathVariable Long userId, @RequestBody UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
-        userService.saveUserTreeAndCharacter(userId, userTreeAndCharacterSaveReqDto);
+    @PutMapping("/users/{socialId}")
+    public void saveTreeAndCharacter(@PathVariable String socialId, @RequestBody UserTreeAndCharacterSaveReqDto userTreeAndCharacterSaveReqDto) {
+        userService.saveUserTreeAndCharacter(socialId, userTreeAndCharacterSaveReqDto);
     }
 
-    @DeleteMapping("/auth/leave/{userId}")
-    public void leaveUser(@PathVariable Long userId) {
-        userService.leaveUser(userId);
+    @DeleteMapping("/auth/leave/{socialId}")
+    public void leaveUser(@PathVariable String socialId) {
+        userService.leaveUser(socialId);
     }
 
-    @PutMapping("/auth/logout/{userId}")
-    public void logout(@PathVariable Long userId) {
-        userService.logout(userId);
+    @PutMapping("/auth/logout/{socialId}")
+    public void logout(@PathVariable String socialId) {
+        userService.logout(socialId);
     }
 
     @PostMapping("/testDataInit")

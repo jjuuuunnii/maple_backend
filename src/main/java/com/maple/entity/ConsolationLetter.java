@@ -15,7 +15,6 @@ import lombok.Setter;
 @Builder
 public class ConsolationLetter {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consolationLetter_id_seq")
     @SequenceGenerator(name = "consolationLetter_id_seq", sequenceName = "consolationLetter_id_seq")

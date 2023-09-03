@@ -17,19 +17,20 @@ public class LetterController {
 
     private final LetterService letterService;
 
-    @PostMapping("/users/{userId}/letters")
-    public void saveLetter(@PathVariable Long userId, @RequestBody LetterSaveReqDto letterSaveReqDto) {
-        letterService.saveLetter(userId, letterSaveReqDto);
+    @PostMapping("/users/{socialId}/letters")
+    public void saveLetter(@PathVariable String socialId, @RequestBody LetterSaveReqDto letterSaveReqDto) {
+        letterService.saveLetter(socialId, letterSaveReqDto);
     }
 
-    @GetMapping("/users/{userId}/letters")
-    public LetterListResDto getLetterList(@PathVariable Long userId) {
-        return letterService.getLetterList(userId);
+    @GetMapping("/users/{socialId}/letters")
+    public LetterListResDto getLetterList(@PathVariable String socialId) {
+
+        return letterService.getLetterList(socialId);
     }
 
-    @GetMapping("/users/{userId}/letters/{selectedDate}")
-    public List<LetterInfoResDto> getLetterInfo(@PathVariable Long userId, @PathVariable int selectedDate) {
-        return letterService.getLetterInfo(userId, selectedDate);
+    @GetMapping("/users/{socialId}/letters/{selectedDate}")
+    public List<LetterInfoResDto> getLetterInfo(@PathVariable String socialId, @PathVariable int selectedDate) {
+        return letterService.getLetterInfo(socialId, selectedDate);
     }
 
 }

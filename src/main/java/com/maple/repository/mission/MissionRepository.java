@@ -13,10 +13,10 @@ public class MissionRepository {
     private final EntityManager em;
 
 
-    public void saveMissionStatusWithNowDateAndStatus(Boolean status, int nowDate, Long userId) {
-        Mission mission = (Mission) em.createQuery("select m from Mission m where m.nowDate =: nowDate And m.user.id =: userId")
+    public void saveMissionStatusWithNowDateAndStatus(Boolean status, int nowDate, String socialId) {
+        Mission mission = (Mission) em.createQuery("select m from Mission m where m.nowDate =: nowDate And m.user.socialId =: socialId")
                 .setParameter("nowDate", nowDate)
-                .setParameter("userId", userId)
+                .setParameter("socialId", socialId)
                 .getSingleResult();
         mission.setMissionStatus(status);
     }
@@ -33,6 +33,5 @@ public class MissionRepository {
                 .setParameter("userId", userId)
                 .setParameter("nowDate", nowDate)
                 .getSingleResult();
-
     }
 }

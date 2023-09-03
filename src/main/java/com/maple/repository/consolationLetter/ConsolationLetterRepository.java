@@ -12,21 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class ConsolationLetterRepository {
 
     private final EntityManager em;
 
-    @Transactional
     public void save(ConsolationLetter letter) {
         em.persist(letter);
     }
 
-    @Transactional(readOnly = true)
+
     public ConsolationLetter findByNowDate(int nowDate) {
         return (ConsolationLetter) em.createQuery("select c from ConsolationLetter c where c.id =: nowDate")
                 .setParameter("nowDate", Long.valueOf(nowDate))
                 .getSingleResult();
     }
-
 }
