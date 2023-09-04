@@ -56,7 +56,7 @@ public class UserController {
         userService.saveTestData();
     }*/
 
-    @GetMapping("/auth/refresh")
+    @PostMapping("/auth/refresh")
     public ResponseEntity<Void> refreshToken(){
         return ResponseEntity.ok().build();}
 }

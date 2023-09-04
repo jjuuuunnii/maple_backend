@@ -72,6 +72,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
 
     public void reIssueAccessTokenAndRefreshToken(String refreshToken, HttpServletResponse response) {
+        log.info("refreshToken 재발급 시작 ");
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(
                         user -> {
@@ -80,6 +81,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                             jwtService.updateRefreshToken(user.getSocialId(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
                             saveAuthentication(user);
+                            log.info("refreshToken 발급 완료");
                         }
 
                 );
