@@ -53,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 25 14 * * ?")
     public void updateTimeFromSignup() {
         int pageSize = 100;
         int pageNumber = 0;
