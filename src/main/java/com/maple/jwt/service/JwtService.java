@@ -49,12 +49,11 @@ public class JwtService {
 
     private final UserRepository userRepository;
 
-    public String createAccessToken(String email, SocialType socialType, String socialId){
+    public String createAccessToken(SocialType socialType, String socialId){
         Date nowDate = new Date();
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(nowDate.getTime() + accessTokenExpirationPeriod))
-                .withClaim(EMAIL_CLAIM, email)
                 .withClaim(SOCIAL_ID_CLAIM, socialId)
                 .withClaim(SOCIAL_TYPE_CLAIM, socialType.toString())
                 .sign(Algorithm.HMAC512(secretKey));
@@ -68,19 +67,10 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-/*
- public void sendAccessToken(HttpServletResponse response, String accessToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setHeader(accessHeader, accessToken);
-        log.info("재발급된 Access Token : {}", accessToken);
-    }
- */
-
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader(accessHeader, BEARER + accessToken);
         response.setHeader(refreshHeader, BEARER + refreshToken);
-        log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request){
@@ -94,19 +84,6 @@ public class JwtService {
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER,""));
     }
-
-/*    public Optional<String> extractEmail(String accessToken){
-        try{
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(accessToken)
-                    .getClaim(EMAIL_CLAIM)
-                    .asString());
-        }catch(Exception e){
-            log.info("유효하지 않은 엑세스 토큰입니다.");
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
-        }
-    }*/
 
 
     public Optional<String> extractSocialId(String accessToken) {

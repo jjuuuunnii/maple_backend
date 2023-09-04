@@ -29,7 +29,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
     private static final String NO_CHECK_URL_OAUTH_LOGIN = "/api/oauth/**";
 
-
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
@@ -76,7 +75,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(
                         user -> {
-                            String reIssuedAccessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType(), user.getSocialId());
+                            String reIssuedAccessToken = jwtService.createAccessToken(user.getSocialType(), user.getSocialId());
                             String reIssuedRefreshToken = jwtService.createRefreshToken();
                             jwtService.updateRefreshToken(user.getSocialId(), reIssuedRefreshToken);
                             jwtService.sendAccessAndRefreshToken(response, reIssuedAccessToken, reIssuedRefreshToken);
@@ -84,7 +83,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                         }
 
                 );
-
     }
 
     private void checkAccessTokenAndAuthentication(HttpServletRequest request) {

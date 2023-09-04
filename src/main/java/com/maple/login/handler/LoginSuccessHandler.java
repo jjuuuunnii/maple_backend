@@ -22,11 +22,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
         User user = principalDetails.getUser();
-        String email = user.getEmail();
         SocialType socialType = user.getSocialType();
         String socialId = user.getSocialId();
 
-        String accessToken = jwtService.createAccessToken(email, socialType, socialId);
+        String accessToken = jwtService.createAccessToken(socialType, socialId);
         String refreshToken = jwtService.createRefreshToken();
         jwtService.updateRefreshToken(user.getSocialId(), refreshToken);
         log.info("{} 유저 로그인 성공", user.getEmail());

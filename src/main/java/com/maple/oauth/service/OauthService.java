@@ -59,7 +59,7 @@ public class OauthService {
     }
 
     private TokenPair generateTokens(User user) {
-        String accessToken = jwtService.createAccessToken(user.getEmail(), user.getSocialType(), user.getSocialId());
+        String accessToken = jwtService.createAccessToken(user.getSocialType(), user.getSocialId());
         String refreshToken = jwtService.createRefreshToken();
         return new TokenPair(accessToken, refreshToken);
     }
@@ -71,11 +71,6 @@ public class OauthService {
     private void sendTokensToClient(HttpServletResponse response, TokenPair tokens) {
         jwtService.sendAccessAndRefreshToken(response, tokens.getAccessToken(), tokens.getRefreshToken());
     }
-
-   /* private void logTokens(TokenPair tokens) {
-        log.info("accessToken = {}", tokens.getAccessToken());
-        log.info("refreshToken = {}", tokens.getRefreshToken());
-    }*/
 
     private static class TokenPair {
         private final String accessToken;

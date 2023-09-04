@@ -7,12 +7,14 @@ import com.maple.oauth.config.naver.NaverOauthConfig;
 import com.maple.oauth.dto.naver.NaverToken;
 import com.maple.oauth.dto.naver.NaverUserResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class NaverUserClient implements OauthUserClient {
 
     private final NaverApiClient naverApiClient;

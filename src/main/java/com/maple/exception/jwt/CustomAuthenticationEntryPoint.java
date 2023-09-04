@@ -15,12 +15,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.info("request.getRequestURI() = {} ", request.getRequestURI());
+        log.info("authException = {}", authException.getClass().toString());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/plain;charset=UTF-8");
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", ErrorCode.INVALID_TOKEN.getCode());
+        jsonObject.put("code", authException.getMessage());
         response.getWriter().write(jsonObject.toString());
-        log.info("인증되지 않은 토큰 입니다");
     }
 }
