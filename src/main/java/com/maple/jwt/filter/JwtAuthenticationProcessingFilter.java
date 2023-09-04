@@ -49,9 +49,11 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         /**
          * refreshToken 유효성 검사
          */
+        log.info("====테스트===");
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
+        log.info("====테스트 끝===");
 
         /**
          * refreshToken 유효한 상태 => refreshToken, accessToken, 둘다 발급해야하는 상태
