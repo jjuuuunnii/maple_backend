@@ -25,15 +25,6 @@ public class LetterRepository {
         return letter.getId();
     }
 
-    @Transactional(readOnly = true)
-    public Optional<List<Letter>> findByCreatedAt(int createdAt) {
-        List<Letter> letters = em.createQuery("select l from Letter l where l.createdAt = :createdAt", Letter.class)
-                .setParameter("createdAt", createdAt)
-                .getResultList();
-
-        return Optional.ofNullable(letters);
-    }
-
 
     @Transactional(readOnly = true)
     public Optional<List<LetterCountDto>> countAllLettersByDateUntilNowDate(Long userId) {
@@ -49,10 +40,6 @@ public class LetterRepository {
 
         return Optional.ofNullable(dtoList);
     }
-
-
-
-
 
 
     public List<Letter> findByUserIdAndSelectedDate(Long userId, int selectedDate) {

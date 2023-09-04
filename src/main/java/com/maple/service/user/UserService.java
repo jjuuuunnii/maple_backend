@@ -53,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 25 14 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateTimeFromSignup() {
         int pageSize = 100;
         int pageNumber = 0;
@@ -130,6 +130,7 @@ public class UserService {
                 userTreeAndCharacterSaveReqDto.getTreeType(),
                 userTreeAndCharacterSaveReqDto.getCharacterType());
 
+        log.info("=== {} 유저, 나무 = {}, 캐릭터 = {} 저장완료 ===", user.getTree(), user.getCharacter());
     }
 
     @Transactional
@@ -137,7 +138,10 @@ public class UserService {
         User user = userRepository.findBySocialId(socialId).orElseThrow(() -> {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
+        String userName = user.getName();
         userRepository.deleteById(user.getId());
+        log.info("=== {} 유저 삭제 ===", userName);
+
     }
     @Transactional
     public void logout(String socialId) {
@@ -145,6 +149,8 @@ public class UserService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         user.setRefreshToken(null);
+        log.info("=== {} 유저 로그아웃 ===", user.getName());
+
     }
 
     @Transactional

@@ -38,8 +38,7 @@ public class OauthService {
         TokenPair tokens = generateTokens(user);
         saveRefreshToken(user, tokens.getRefreshToken());
         sendTokensToClient(response, tokens);
-
-//        logTokens(tokens);
+        log.info("==== {} 유저 로그인 완료 ====", user.getName());
     }
 
     private User fetchOrSaveUser(SocialType socialType, String authCode) {

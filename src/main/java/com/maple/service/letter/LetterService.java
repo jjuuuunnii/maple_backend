@@ -53,16 +53,14 @@ public class LetterService {
 
         String content = letter.getSenderName()+" "+letter.getContent();
 
-        /**
-         *
-         * TODO 시간 제한 필요!!!
-         */
+
         if (missionService.checkWordInLetter(content, user.getTimeFromSignup()) ||
                 missionService.checkLetterCount(user.letterCnt(), user.getTimeFromSignup()) ||
                 missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
             user.setTodayMissionStatus(true);
         }
         letterRepository.save(letter);
+        log.info("sender = {}, to = {}, 편지 저장 완료", letter.getSenderName(), user.getName());
     }
 
 
@@ -100,7 +98,6 @@ public class LetterService {
 
         List<Letter> letters = letterRepository.findByUserIdAndSelectedDate(user.getId(), selectedDate);
         List<LetterInfoResDto> letterInfoResDtos = new ArrayList<>();
-
 
         if (!user.isLettersOverFive()) {
             ConsolationLetter consolationLetter = consolationLetterRepository.findByNowDate(selectedDate);

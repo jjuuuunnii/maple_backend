@@ -34,6 +34,7 @@ public class MissionService {
                 user -> {
                     missionRepository.saveMissionStatusWithNowDateAndStatus(status, nowDate, socialId);
                     user.setTodayMissionStatus(true);
+                    log.info("==== {} 유저 첫번째 미션 완료 ====", user.getName());
                 },
                 () -> {
                     throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -113,6 +114,9 @@ public class MissionService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         });
         missionRepository.saveMissionStatusWithNowDateAndStatus(status, user.getTimeFromSignup(), socialId);
-        return missionRepository.findMissionByUserIdAndNowDate(user.getId(), user.getTimeFromSignup()).isMissionStatus();
+        Mission missionByUserIdAndNowDate = missionRepository.findMissionByUserIdAndNowDate(user.getId(), user.getTimeFromSignup());
+        log.info("==== {} 유저의 보상 수령 상태 = {} ===", user.getName(), missionByUserIdAndNowDate.isMissionStatus());
+
+        return missionByUserIdAndNowDate.isMissionStatus();
     }
 }
