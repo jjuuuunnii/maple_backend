@@ -106,7 +106,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         PrincipalDetails principalDetails = new PrincipalDetails(user);
 
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(principalDetails, null, Collections.emptyList());
+                new UsernamePasswordAuthenticationToken(principalDetails, null, null);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
