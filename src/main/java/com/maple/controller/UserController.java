@@ -4,6 +4,7 @@ import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
+import com.maple.dto.user.res.VisitorHomeResDto;
 import com.maple.login.service.PrincipalDetails;
 import com.maple.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,11 @@ public class UserController {
     public OwnerHomeResDto getOwnerHome(@PathVariable String socialId){
 
         return userService.getOwnerHome(socialId);
+    }
+
+    @GetMapping("/users/visitor/{socialId}")
+    public VisitorHomeResDto getVisitorHome(@PathVariable String socialId) {
+        return userService.getVisitorHome(socialId);
     }
 
     @PutMapping("/users/{socialId}")

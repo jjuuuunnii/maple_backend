@@ -5,6 +5,7 @@ import com.maple.dto.user.req.UserSignupReqDto;
 import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
+import com.maple.dto.user.res.VisitorHomeResDto;
 import com.maple.entity.ConsolationLetter;
 import com.maple.entity.Mission;
 import com.maple.entity.SocialType;
@@ -186,5 +187,36 @@ public class UserService {
 
             userRepository.save(user);
         }
+    }
+
+    public VisitorHomeResDto getVisitorHome(String socialId) {
+
+        User user = userRepository.findBySocialId(socialId)
+                .orElseThrow(() -> {
+                    throw new CustomException(ErrorCode.USER_NOT_FOUND);
+                });
+
+        List<LetterCountDto> letterCounts = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
+                .orElse(Collections.emptyList());
+
+        List<Boolean> lettersOverFive = new ArrayList<>();
+        for (int i = 1; i <= 30; i++) {
+            final int day = i;
+
+            if (i <= user.getTimeFromSignup()) {
+                lettersOverFive.add(letterCounts.stream()
+                        .anyMatch(lc -> lc.getCreatedAt() == day && lc.getCount() >= 5));
+            } else {
+                lettersOverFive.add(false);
+            }
+        }
+
+        return VisitorHomeResDto.builder()
+                .treeType(user.getTree())
+                .characterType(user.getCharacter())
+                .userName(user.getName())
+                .nowDate(user.getTimeFromSignup())
+                .lettersOverFive(lettersOverFive)
+                .build();
     }
 }
