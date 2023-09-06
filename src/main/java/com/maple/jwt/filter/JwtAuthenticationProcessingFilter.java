@@ -28,6 +28,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     private static final String NO_CHECK_URL_LOGIN = "/api/auth/login/self";
     private static final String NO_CHECK_URL_SIGNUP = "/api/auth/signup/self";
     private static final String NO_CHECK_URL_OAUTH_LOGIN = "/api/oauth/**";
+    private static final String NO_CHECK_URL_VISITOR = "/api/users/visitor/**";
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -41,7 +42,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getRequestURI().contains(NO_CHECK_URL_LOGIN)
                 || request.getRequestURI().contains(NO_CHECK_URL_SIGNUP)
-                || request.getRequestURI().contains(NO_CHECK_URL_OAUTH_LOGIN)){
+                || request.getRequestURI().contains(NO_CHECK_URL_OAUTH_LOGIN)
+                ||request.getRequestURI().contains(NO_CHECK_URL_VISITOR)){
             filterChain.doFilter(request,response);
             return;
         }
