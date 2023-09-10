@@ -14,20 +14,19 @@ public class ExceptionHandlers {
 
     @ExceptionHandler({CustomException.class})
     public ResponseEntity handleCustomException(CustomException e) {
-        log.info("error = {}",e.getErrorCode().getCode());
+        log.error("error = {}",e.getErrorCode().getCode());
         return new ResponseEntity(e.getErrorCode().getCode(), e.getErrorCode().getHttpStatus());
     }
 
     @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity handleCustomException(UsernameNotFoundException e) {
-        log.info("error = {}",e.getMessage());
+        log.error("error = {}",e.getMessage());
         return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     //DTO에서 예외가 들어왔을 때
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity handleValidationExceptions(MethodArgumentNotValidException ex) {
-
         return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

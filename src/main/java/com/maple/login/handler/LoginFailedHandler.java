@@ -20,6 +20,6 @@ public class LoginFailedHandler extends SimpleUrlAuthenticationFailureHandler {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", ErrorCode.LOGIN_FAILED.getCode());
         response.getWriter().write(jsonObject.toString());
-        log.info("로그인에 실패했습니다");
+        log.error("로그인에 실패했습니다");
     }
 }

@@ -94,7 +94,7 @@ public class JwtService {
                     .getClaim(SOCIAL_ID_CLAIM)
                     .asString());
         }catch(Exception e){
-            log.info("유효하지 않은 엑세스 토큰입니다.");
+            log.error("유효하지 않은 엑세스 토큰입니다.");
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
@@ -109,7 +109,7 @@ public class JwtService {
 
             return Optional.of(SocialType.valueOf(socialTypeStr));
         } catch(Exception e) {
-            log.info("유효하지 않은 엑세스 토큰입니다.");
+            log.error("유효하지 않은 엑세스 토큰입니다.");
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
@@ -128,7 +128,7 @@ public class JwtService {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
             return true;
         }catch(Exception e){
-            log.info("유효하지 않은 토큰입니다.");
+            log.error("유효하지 않은 토큰입니다.");
             throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }

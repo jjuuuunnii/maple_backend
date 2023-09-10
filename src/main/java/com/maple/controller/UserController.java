@@ -57,10 +57,12 @@ public class UserController {
         userService.logout(socialId);
     }
 
-/*    @PostMapping("/testDataInit")
+    @PostMapping("/testDataInit")
     public void saveTestData(){
         userService.saveTestData();
-    }*/
+    }
+
+
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<Void> refreshToken(){
