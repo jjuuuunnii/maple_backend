@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class LetterRepository {
 
     private final EntityManager em;
@@ -26,7 +25,7 @@ public class LetterRepository {
     }
 
 
-    @Transactional(readOnly = true)
+
     public Optional<List<LetterCountDto>> countAllLettersByDateUntilNowDate(Long userId) {
         TypedQuery<Object[]> query = em.createQuery("select l.createdAt, count(l) from Letter l where l.user.id =: userId and l.createdAt <= :nowDate group by l.createdAt", Object[].class);
         query.setParameter("userId", userId);
@@ -40,6 +39,7 @@ public class LetterRepository {
 
         return Optional.ofNullable(dtoList);
     }
+
 
 
     public List<Letter> findByUserIdAndSelectedDate(Long userId, int selectedDate) {

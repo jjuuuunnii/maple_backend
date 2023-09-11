@@ -103,7 +103,7 @@ public class LetterService {
          * TODO -> 날짜별 코드로 변경할 필요가 있음
          * 현재는 해당하는날짜로 판단하게 됨
          */
-        if (!user.isLettersOverFive()) {
+        if (!(letters.size()>=5)) {
             ConsolationLetter consolationLetter = consolationLetterRepository.findByNowDate(selectedDate);
             letterInfoResDtos.add(
                     LetterInfoResDto.builder()
