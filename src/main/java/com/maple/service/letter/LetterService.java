@@ -99,6 +99,10 @@ public class LetterService {
         List<Letter> letters = letterRepository.findByUserIdAndSelectedDate(user.getId(), selectedDate);
         List<LetterInfoResDto> letterInfoResDtos = new ArrayList<>();
 
+        /**
+         * TODO -> 날짜별 코드로 변경할 필요가 있음
+         * 현재는 해당하는날짜로 판단하게 됨
+         */
         if (!user.isLettersOverFive()) {
             ConsolationLetter consolationLetter = consolationLetterRepository.findByNowDate(selectedDate);
             letterInfoResDtos.add(
