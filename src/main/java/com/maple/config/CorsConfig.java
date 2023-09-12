@@ -27,6 +27,8 @@ public class CorsConfig {
         configuration.addExposedHeader("authorization");
         configuration.addExposedHeader("reauthorization");
 
+        source.registerCorsConfiguration("/**", configuration); // 이 부분이 추가되었습니다
+
         return new CorsFilter(source);
     }
 }
