@@ -17,6 +17,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER NOT FOUND"),
 
     //500
+    HTTP_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "HTTP API ERROR"),
+
     INVALID_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "INVALID REQUEST");
 
     private HttpStatus httpStatus;

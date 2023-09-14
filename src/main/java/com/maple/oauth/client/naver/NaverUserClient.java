@@ -2,6 +2,8 @@ package com.maple.oauth.client.naver;
 
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.oauth.client.OauthUserClient;
 import com.maple.oauth.config.naver.NaverOauthConfig;
 import com.maple.oauth.dto.naver.NaverToken;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.util.Currency;
 
 @Component
 @RequiredArgsConstructor
@@ -27,9 +31,14 @@ public class NaverUserClient implements OauthUserClient {
 
     @Override
     public User fetch(String authCode) {
-        NaverToken tokenInfo = naverApiClient.fetchToken(tokenRequestParam(authCode));
-        NaverUserResponse naverUserResponse = naverApiClient.fetchUser("Bearer "+ tokenInfo.getAccessToken());
-        return naverUserResponse.toEntity();
+        try{
+            NaverToken tokenInfo = naverApiClient.fetchToken(tokenRequestParam(authCode));
+            NaverUserResponse naverUserResponse = naverApiClient.fetchUser("Bearer "+ tokenInfo.getAccessToken());
+            return naverUserResponse.toEntity();
+        }catch (CustomException e){
+            throw new CustomException(ErrorCode.HTTP_API_ERROR);
+        }
+
     }
 
     private MultiValueMap<String, String> tokenRequestParam(String authCode) {

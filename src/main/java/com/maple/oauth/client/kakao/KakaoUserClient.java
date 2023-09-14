@@ -3,6 +3,8 @@ package com.maple.oauth.client.kakao;
 
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.oauth.client.OauthUserClient;
 import com.maple.oauth.config.kakao.KakaoOauthConfig;
 import com.maple.oauth.dto.kakao.KakaoToken;
@@ -26,9 +28,14 @@ public class KakaoUserClient implements OauthUserClient {
 
     @Override
     public User fetch(String authCode) {
-        KakaoToken kakaoToken = kakaoApiClient.fetchToken(tokenRequestParams(authCode));
-        KakaoUserResponse kakaoUserResponse = kakaoApiClient.fetchMember("Bearer " + kakaoToken.getAccessToken());
-        return kakaoUserResponse.toUser();
+        try {
+            KakaoToken kakaoToken = kakaoApiClient.fetchToken(tokenRequestParams(authCode));
+            KakaoUserResponse kakaoUserResponse = kakaoApiClient.fetchMember("Bearer " + kakaoToken.getAccessToken());
+            return kakaoUserResponse.toUser();
+        } catch (CustomException e) {
+            throw new CustomException(ErrorCode.HTTP_API_ERROR);
+        }
+
     }
 
     private LinkedMultiValueMap<String, String> tokenRequestParams(String authCode) {

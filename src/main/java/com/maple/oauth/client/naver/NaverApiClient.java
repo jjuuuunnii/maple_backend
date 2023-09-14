@@ -1,5 +1,6 @@
 package com.maple.oauth.client.naver;
 
+import com.maple.exception.custom.CustomException;
 import com.maple.oauth.dto.naver.NaverToken;
 import com.maple.oauth.dto.naver.NaverUserResponse;
 import org.springframework.util.MultiValueMap;

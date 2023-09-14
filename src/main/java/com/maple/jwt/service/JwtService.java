@@ -6,6 +6,7 @@ import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
 import com.maple.exception.custom.ErrorCode;
+import com.maple.exception.jwt.InvalidAccessTokenException;
 import com.maple.repository.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,7 +96,7 @@ public class JwtService {
                     .asString());
         }catch(Exception e){
             log.error("유효하지 않은 엑세스 토큰입니다.");
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
+            throw new InvalidAccessTokenException("유효하지 않은 엑세스 토큰입니다.",ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 
@@ -110,7 +111,7 @@ public class JwtService {
             return Optional.of(SocialType.valueOf(socialTypeStr));
         } catch(Exception e) {
             log.error("유효하지 않은 엑세스 토큰입니다.");
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
+            throw new InvalidAccessTokenException("유효하지 않은 엑세스 토큰입니다.",ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 
@@ -129,7 +130,7 @@ public class JwtService {
             return true;
         }catch(Exception e){
             log.error("유효하지 않은 토큰입니다.");
-            throw new AuthenticationException(ErrorCode.INVALID_TOKEN.getCode()){};
+            throw new InvalidAccessTokenException("유효하지 않은 토큰입니다.",ErrorCode.INVALID_TOKEN.getCode()){};
         }
     }
 }

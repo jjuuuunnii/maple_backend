@@ -47,7 +47,7 @@ public class CustomJsonUsernamePasswordAuthenticationFilter extends AbstractAuth
 
 
         } catch (IOException e) {
-            log.info("=========================로그인 실패============================");
+            log.error("=========================로그인 실패============================");
             throw new AuthenticationException(ErrorCode.LOGIN_FAILED.getCode()){};
         }
     }

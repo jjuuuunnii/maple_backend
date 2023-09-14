@@ -1,12 +1,12 @@
 package com.maple.exception.jwt;
 
-import com.maple.exception.custom.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+
 import java.io.IOException;
 
 @Slf4j
@@ -15,13 +15,23 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.info("request.getRequestURI() = {} ", request.getRequestURI());
-        log.info("authException = {}", authException.getClass().toString());
-        log.info("error = {}", authException.getMessage());
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", authException.getMessage());
+
+        if (authException instanceof InvalidAccessTokenException) {
+            InvalidAccessTokenException ex = (InvalidAccessTokenException) authException;
+            jsonObject.put("message", ex.getMessage());
+            jsonObject.put("code", ex.getErrorCode());
+        } else {
+            jsonObject.put("message", authException.getMessage());
+            jsonObject.put("code", "UNKNOWN_ERROR");
+        }
         response.getWriter().write(jsonObject.toString());
+
+        log.error("error = {}", authException.getMessage());
     }
 }
+

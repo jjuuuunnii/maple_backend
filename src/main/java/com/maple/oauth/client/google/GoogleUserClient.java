@@ -3,6 +3,8 @@ package com.maple.oauth.client.google;
 
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
+import com.maple.exception.custom.CustomException;
+import com.maple.exception.custom.ErrorCode;
 import com.maple.oauth.client.OauthUserClient;
 import com.maple.oauth.config.google.GoogleOauthConfig;
 import com.maple.oauth.dto.google.GoogleToken;
@@ -26,9 +28,14 @@ public class GoogleUserClient implements OauthUserClient {
 
     @Override
     public User fetch(String authCode) {
-        GoogleToken tokenInfo = googleApiClient.fetchToken(tokenRequestParams(authCode));
-        GoogleUserResponse googleUserResponse = googleApiClient.fetchUser("Bearer " + tokenInfo.getAccessToken());
-        return googleUserResponse.toUser();
+        try{
+            GoogleToken tokenInfo = googleApiClient.fetchToken(tokenRequestParams(authCode));
+            GoogleUserResponse googleUserResponse = googleApiClient.fetchUser("Bearer " + tokenInfo.getAccessToken());
+            return googleUserResponse.toUser();
+        }catch (CustomException e){
+            throw new CustomException(ErrorCode.HTTP_API_ERROR);
+        }
+
     }
 
     private MultiValueMap<String, String> tokenRequestParams(String authCode) {
