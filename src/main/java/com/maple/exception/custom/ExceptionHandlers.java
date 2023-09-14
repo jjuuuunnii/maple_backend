@@ -1,5 +1,7 @@
 package com.maple.exception.custom;
 
+import com.maple.dto.exception.ErrorDto;
+import com.maple.exception.jwt.InvalidAccessTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +15,32 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlers {
 
     @ExceptionHandler({CustomException.class})
-    public ResponseEntity handleCustomException(CustomException e) {
+    public ResponseEntity<ErrorDto> handleCustomException(CustomException e) {
         log.error("error = {}",e.getErrorCode().getCode());
-        return new ResponseEntity(e.getErrorCode().getCode(), e.getErrorCode().getHttpStatus());
+        ErrorDto errorDto = ErrorDto.builder().code(e.getMessage()).build();
+        return new ResponseEntity<>(errorDto, e.getErrorCode().getHttpStatus());
     }
 
     @ExceptionHandler({UsernameNotFoundException.class})
-    public ResponseEntity handleCustomException(UsernameNotFoundException e) {
+    public ResponseEntity<ErrorDto> handleCustomException(UsernameNotFoundException e) {
         log.error("error = {}",e.getMessage());
-        return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        ErrorDto errorDto = ErrorDto.builder().code(e.getMessage()).build();
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
     }
 
     //DTO에서 예외가 들어왔을 때
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return new ResponseEntity(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorDto> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        log.error("error = {}", ex.getMessage());
+        ErrorDto errorDto = ErrorDto.builder().code(ex.getMessage()).build();
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidAccessTokenException.class})
+    public ResponseEntity<ErrorDto> handleInvalidAccessTokenException(InvalidAccessTokenException e) {
+        log.error("error = {}", e.getMessage());
+        ErrorDto errorDto = ErrorDto.builder().code(e.getMessage()).build();
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
 }
