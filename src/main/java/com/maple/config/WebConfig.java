@@ -74,11 +74,6 @@ public class WebConfig implements WebMvcConfigurer {
         return new LoginFailedHandler();
     }
 
-    @Bean
-    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint(){
-        return new CustomAuthenticationEntryPoint();
-    }
-
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new OauthServerTypeConverter());
