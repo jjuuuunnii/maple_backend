@@ -54,8 +54,10 @@ public class LetterService {
         String content = letter.getSenderName()+" "+letter.getContent();
 
 
+        List<Letter> userLetters = letterRepository.findByUserIdAndSelectedDate(user.getId(), user.getTimeFromSignup());
+
         if (missionService.checkWordInLetter(content, user.getTimeFromSignup()) ||
-                missionService.checkLetterCount(user.letterCnt(), user.getTimeFromSignup()) ||
+                missionService.checkLetterCount(userLetters.size(), user.getTimeFromSignup()) ||
                 missionService.checkLetterTime(letter.getLocalDateTime(), user.getTimeFromSignup())) {
             user.setTodayMissionStatus(true);
         }
