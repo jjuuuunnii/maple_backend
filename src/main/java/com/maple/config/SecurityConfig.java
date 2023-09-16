@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/signup/self","/api/auth/login/self").permitAll()
                         .requestMatchers("/api/oauth/**").permitAll()
                         .requestMatchers("/api/users/visitor/**").permitAll()
+                        .requestMatchers("/api/healthChecking").permitAll()
                         .anyRequest().authenticated())
 
                 .exceptionHandling()

@@ -95,8 +95,8 @@ public class JwtService {
                     .getClaim(SOCIAL_ID_CLAIM)
                     .asString());
         }catch(InvalidAccessTokenException e){
-            log.error("유효하지 않은 엑세스 토큰입니다.");
-            return null;
+            log.error("유효하지 않은 엑세스 토큰입니다!!!!!!.");
+            throw new InvalidAccessTokenException("유효하지 않은 엑세스 토큰입니다.",ErrorCode.INVALID_TOKEN.getCode());
         }
     }
 

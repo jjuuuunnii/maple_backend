@@ -103,13 +103,45 @@ public class UserService {
 
             if (i <= user.getTimeFromSignup()) {
                 lettersOverFive.add(letterCounts.stream()
-                        .anyMatch(lc -> lc.getCreatedAt() == day && lc.getCount() >= 5));
+                        .anyMatch(lc -> lc.getCreatedAt() == day && lc.getCount() >= 2));
             } else {
                 lettersOverFive.add(false);
             }
         }
 
         return OwnerHomeResDto.builder()
+                .treeType(user.getTree())
+                .characterType(user.getCharacter())
+                .userName(user.getName())
+                .nowDate(user.getTimeFromSignup())
+                .lettersOverFive(lettersOverFive)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public VisitorHomeResDto getVisitorHome(String socialId) {
+
+        User user = userRepository.findBySocialId(socialId)
+                .orElseThrow(() -> {
+                    throw new CustomException(ErrorCode.USER_NOT_FOUND);
+                });
+
+        List<LetterCountDto> letterCounts = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
+                .orElse(Collections.emptyList());
+
+        List<Boolean> lettersOverFive = new ArrayList<>();
+        for (int i = 1; i <= 30; i++) {
+            final int day = i;
+
+            if (i <= user.getTimeFromSignup()) {
+                lettersOverFive.add(letterCounts.stream()
+                        .anyMatch(lc -> lc.getCreatedAt() == day && lc.getCount() >= 2));
+            } else {
+                lettersOverFive.add(false);
+            }
+        }
+
+        return VisitorHomeResDto.builder()
                 .treeType(user.getTree())
                 .characterType(user.getCharacter())
                 .userName(user.getName())
@@ -154,69 +186,5 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void saveTestData() {
 
-        for (int i = 1; i <= 30; i++) {
-            ConsolationLetter letter = ConsolationLetter.builder()
-                    .senderName("단풍이")
-                    .content("안녕하세요!!")
-                    .build();
-            consolationLetterRepository.save(letter);
-
-
-            User user = User.builder()
-                    .name("testUser" + i)
-                    .email("testUser" + i + "@naver.com")
-                    .password(passwordEncoder.encode("test"))
-                    .socialType(SocialType.DEFAULT)
-                    .missions(new ArrayList<>())
-                    .timeFromSignup(i)
-                    .build();
-
-            user.setDefaultTreeAndCharacter();
-
-            for (int nowDate = 1; nowDate <= 30; nowDate++) {
-                Mission mission = Mission.builder()
-                        .missionStatus(false)
-                        .nowDate(nowDate)
-                        .build();
-                user.getMissions().add(mission);
-                mission.setUser(user);
-            }
-
-            userRepository.save(user);
-        }
-    }
-
-    public VisitorHomeResDto getVisitorHome(String socialId) {
-
-        User user = userRepository.findBySocialId(socialId)
-                .orElseThrow(() -> {
-                    throw new CustomException(ErrorCode.USER_NOT_FOUND);
-                });
-
-        List<LetterCountDto> letterCounts = letterRepository.countAllLettersByDateUntilNowDate(user.getId())
-                .orElse(Collections.emptyList());
-
-        List<Boolean> lettersOverFive = new ArrayList<>();
-        for (int i = 1; i <= 30; i++) {
-            final int day = i;
-
-            if (i <= user.getTimeFromSignup()) {
-                lettersOverFive.add(letterCounts.stream()
-                        .anyMatch(lc -> lc.getCreatedAt() == day && lc.getCount() >= 5));
-            } else {
-                lettersOverFive.add(false);
-            }
-        }
-
-        return VisitorHomeResDto.builder()
-                .treeType(user.getTree())
-                .characterType(user.getCharacter())
-                .userName(user.getName())
-                .nowDate(user.getTimeFromSignup())
-                .lettersOverFive(lettersOverFive)
-                .build();
-    }
 }
