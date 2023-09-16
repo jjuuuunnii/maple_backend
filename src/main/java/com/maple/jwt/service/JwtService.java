@@ -14,9 +14,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.Optional;
 
@@ -94,9 +94,9 @@ public class JwtService {
                     .verify(accessToken)
                     .getClaim(SOCIAL_ID_CLAIM)
                     .asString());
-        }catch(Exception e){
+        }catch(InvalidAccessTokenException e){
             log.error("유효하지 않은 엑세스 토큰입니다.");
-            throw new InvalidAccessTokenException("유효하지 않은 엑세스 토큰입니다.",ErrorCode.INVALID_TOKEN.getCode());
+            return null;
         }
     }
 
