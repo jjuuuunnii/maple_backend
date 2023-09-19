@@ -9,6 +9,8 @@ import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,12 +66,23 @@ public class UserRepository {
         }
     }
 
+/*
     public List<User> findAllWithPaging(int pageNumber, int pageSize) {
         return em.createQuery("select u from User u", User.class)
                 .setFirstResult(pageNumber * pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+*/
+
+    public List<User> findAllWithPaging(int pageNumber, int pageSize, LocalDateTime beforeTime) {
+        return em.createQuery("select u from User u where (u.createdAt is null or u.createdAt < :beforeTime)", User.class)
+                .setParameter("beforeTime", beforeTime)
+                .setFirstResult(pageNumber * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
 
 
     public Optional<User> findBySocialId(String socialId) {

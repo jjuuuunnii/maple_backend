@@ -54,8 +54,8 @@ public class UserService {
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 
-  /*  @Transactional
-    @Scheduled(cron = "0 39 1 * * ?")
+    @Transactional
+    @Scheduled(cron = "0 43 2 * * ?")
     public void updateTimeFromSignup() {
 
         int pageSize = 100;
@@ -72,8 +72,7 @@ public class UserService {
             pageNumber++;
         } while (!users.isEmpty());
     }
-*/
-    @Transactional
+   /* @Transactional
     @Scheduled(cron = "0 46 1 * * ?")
     public void updateTimeFromSignup() {
 
@@ -83,7 +82,7 @@ public class UserService {
             user.setTimeFromSignup(user.getTimeFromSignup() + 1);
             user.setTodayMissionStatus(false);
         });
-    }
+    }*/
 
 
 
