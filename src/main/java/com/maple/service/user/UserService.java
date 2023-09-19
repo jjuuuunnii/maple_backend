@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,24 +57,32 @@ public class UserService {
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    @Scheduled(cron = "0 43 2 * * ?")
+    @Transactional
+    @Scheduled(cron = "0 59 2 * * ?")
     public void updateTimeFromSignup() {
-        LocalDateTime now = LocalDateTime.now();
-        int pageSize = 100;
-        int pageNumber = 0;
-        List<User> users;
 
-        do {
-            users = userRepository.findAllWithPagingAndTimestamp(pageNumber, pageSize, now);
-            users.forEach(user -> {
-                em.lock(user, LockModeType.PESSIMISTIC_WRITE);
+        int batchSize = 100;
+        int offset = 0;
+
+        while (true) {
+            List<User> users = userRepository.findAll(offset, batchSize);
+            if (users.isEmpty()) {
+                break;
+            }
+
+            for (User user : users) {
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
                 user.setTodayMissionStatus(false);
-            });
-            pageNumber++;
-        } while (!users.isEmpty());
+            }
+
+            offset += batchSize;
+        }
+
+        // 배치 업데이트를 위해 flush 호출
+        em.flush();
+        em.clear();
     }
+
 
    /* @Transactional
     @Scheduled(cron = "0 46 1 * * ?")

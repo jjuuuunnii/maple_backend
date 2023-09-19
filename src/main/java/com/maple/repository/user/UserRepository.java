@@ -39,10 +39,13 @@ public class UserRepository {
                 });
     }
 
-    public List<User> findAll(){
+    public List<User> findAll(int offset, int limit){
         return em.createQuery("select u from User u", User.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
                 .getResultList();
     }
+
 
     public Optional<User> findByEmail(String email){
         try {
@@ -75,13 +78,13 @@ public class UserRepository {
     }
 */
 
-    public List<User> findAllWithPagingAndTimestamp(int pageNumber, int pageSize, LocalDateTime beforeTime) {
+ /*   public List<User> findAllWithPagingAndTimestamp(int pageNumber, int pageSize, LocalDateTime beforeTime) {
         return em.createQuery("select u from User u where (u.createdAt is null or u.createdAt < :beforeTime)", User.class)
                 .setParameter("beforeTime", beforeTime)
                 .setFirstResult(pageNumber * pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
-    }
+    }*/
 
 
 
