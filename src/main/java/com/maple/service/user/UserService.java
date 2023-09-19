@@ -74,7 +74,7 @@ public class UserService {
     }
 */
     @Transactional
-    @Scheduled(cron = "0 43 1 * * ?")
+    @Scheduled(cron = "0 46 1 * * ?")
     public void updateTimeFromSignup() {
 
         List<User> users = userRepository.findAll();
