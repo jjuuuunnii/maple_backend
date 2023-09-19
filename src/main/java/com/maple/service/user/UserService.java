@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,15 +56,15 @@ public class UserService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 43 2 * * ?")
+    @Scheduled(cron = "0 37 2 * * ?")
     public void updateTimeFromSignup() {
-
+        LocalDateTime now = LocalDateTime.now();
         int pageSize = 100;
         int pageNumber = 0;
         List<User> users;
 
         do {
-            users = userRepository.findAllWithPaging(pageNumber, pageSize);
+            users = userRepository.findAllWithPagingAndTimestamp(pageNumber, pageSize, now);
             users.forEach(user -> {
                 em.lock(user, LockModeType.PESSIMISTIC_WRITE); // 페시미스틱 락 적용
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
@@ -72,6 +73,7 @@ public class UserService {
             pageNumber++;
         } while (!users.isEmpty());
     }
+
    /* @Transactional
     @Scheduled(cron = "0 46 1 * * ?")
     public void updateTimeFromSignup() {

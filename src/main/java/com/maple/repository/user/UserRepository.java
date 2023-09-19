@@ -75,7 +75,7 @@ public class UserRepository {
     }
 */
 
-    public List<User> findAllWithPaging(int pageNumber, int pageSize, LocalDateTime beforeTime) {
+    public List<User> findAllWithPagingAndTimestamp(int pageNumber, int pageSize, LocalDateTime beforeTime) {
         return em.createQuery("select u from User u where (u.createdAt is null or u.createdAt < :beforeTime)", User.class)
                 .setParameter("beforeTime", beforeTime)
                 .setFirstResult(pageNumber * pageSize)
