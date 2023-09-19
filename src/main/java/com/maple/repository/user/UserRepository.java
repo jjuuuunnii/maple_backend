@@ -37,6 +37,11 @@ public class UserRepository {
                 });
     }
 
+    public List<User> findAll(){
+        return em.createQuery("select u from User u", User.class)
+                .getResultList();
+    }
+
     public Optional<User> findByEmail(String email){
         try {
             User user = (User) em.createQuery("select u from User u where u.email = :email")

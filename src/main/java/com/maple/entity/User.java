@@ -47,6 +47,7 @@ public class User {
     private String character;
     private boolean todayMissionStatus;
     private int timeFromSignup;     //회원가입 한날부터 1일
+    private LocalDateTime localDateTime;
 
     @JsonIgnore
     private static final int LAST_DAY =30;
@@ -91,6 +92,7 @@ public class User {
                 .password(password)
                 .missions(new ArrayList<>())
                 .socialId(socialId)
+                .localDateTime(LocalDateTime.now())
                 .socialType(socialType)
                 .build();
 

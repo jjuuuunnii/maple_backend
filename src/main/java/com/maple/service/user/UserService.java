@@ -6,8 +6,6 @@ import com.maple.dto.user.req.UserTreeAndCharacterSaveReqDto;
 import com.maple.dto.user.res.OwnerHomeResDto;
 import com.maple.dto.user.res.UserInfoResDto;
 import com.maple.dto.user.res.VisitorHomeResDto;
-import com.maple.entity.ConsolationLetter;
-import com.maple.entity.Mission;
 import com.maple.entity.SocialType;
 import com.maple.entity.User;
 import com.maple.exception.custom.CustomException;
@@ -21,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +53,7 @@ public class UserService {
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateTimeFromSignup() {
+
         int pageSize = 100;
         int pageNumber = 0;
         List<User> users;
