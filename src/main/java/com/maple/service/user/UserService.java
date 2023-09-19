@@ -13,6 +13,8 @@ import com.maple.exception.custom.ErrorCode;
 import com.maple.repository.consolationLetter.ConsolationLetterRepository;
 import com.maple.repository.letter.LetterRepository;
 import com.maple.repository.user.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +31,8 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
+    private final EntityManager em;
+
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // 비밀번호 인코딩을 위한 인스턴스
@@ -51,7 +55,7 @@ public class UserService {
     }
 
     @Transactional
-    @Scheduled(cron = "0 20 1 * * ?")
+    @Scheduled(cron = "0 33 1 * * ?")
     public void updateTimeFromSignup() {
 
         int pageSize = 100;
@@ -61,6 +65,7 @@ public class UserService {
         do {
             users = userRepository.findAllWithPaging(pageNumber, pageSize);
             users.forEach(user -> {
+                em.lock(user, LockModeType.PESSIMISTIC_WRITE); // 페시미스틱 락 적용
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
                 user.setTodayMissionStatus(false);
             });
