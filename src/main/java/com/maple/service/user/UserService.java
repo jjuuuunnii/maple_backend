@@ -57,7 +57,7 @@ public class UserService {
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 
-    @Transactional
+  /*  @Transactional
     @Scheduled(cron = "0 59 2 * * ?")
     public void updateTimeFromSignup() {
 
@@ -82,10 +82,10 @@ public class UserService {
         em.flush();
         em.clear();
     }
+*/
 
-
-   /* @Transactional
-    @Scheduled(cron = "0 46 1 * * ?")
+    @Transactional
+    @Scheduled(cron = "0 1 3 * * ?")
     public void updateTimeFromSignup() {
 
         List<User> users = userRepository.findAll();
@@ -94,7 +94,7 @@ public class UserService {
             user.setTimeFromSignup(user.getTimeFromSignup() + 1);
             user.setTodayMissionStatus(false);
         });
-    }*/
+    }
 
 
 

@@ -39,13 +39,10 @@ public class UserRepository {
                 });
     }
 
-    public List<User> findAll(int offset, int limit){
+    public List<User> findAll(){
         return em.createQuery("select u from User u", User.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
                 .getResultList();
     }
-
 
     public Optional<User> findByEmail(String email){
         try {
