@@ -92,7 +92,7 @@ public class User {
                 .password(password)
                 .missions(new ArrayList<>())
                 .socialId(socialId)
-                .localDateTime(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .socialType(socialType)
                 .build();
 
