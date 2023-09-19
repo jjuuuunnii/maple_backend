@@ -54,7 +54,7 @@ public class UserService {
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 
-    @Transactional
+  /*  @Transactional
     @Scheduled(cron = "0 39 1 * * ?")
     public void updateTimeFromSignup() {
 
@@ -72,6 +72,19 @@ public class UserService {
             pageNumber++;
         } while (!users.isEmpty());
     }
+*/
+    @Transactional
+    @Scheduled(cron = "0 43 1 * * ?")
+    public void updateTimeFromSignup() {
+
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            em.lock(user, LockModeType.PESSIMISTIC_WRITE); // 페시미스틱 락 적용
+            user.setTimeFromSignup(user.getTimeFromSignup() + 1);
+            user.setTodayMissionStatus(false);
+        });
+    }
+
 
 
     private String getEncodedPassword(UserSignupReqDto userSignupReqDto) {
