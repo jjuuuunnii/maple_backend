@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -55,8 +56,8 @@ public class UserService {
                 .ifPresent(u -> { throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS); });
     }
 
-    @Transactional
-    @Scheduled(cron = "0 37 2 * * ?")
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Scheduled(cron = "0 43 2 * * ?")
     public void updateTimeFromSignup() {
         LocalDateTime now = LocalDateTime.now();
         int pageSize = 100;
@@ -66,7 +67,7 @@ public class UserService {
         do {
             users = userRepository.findAllWithPagingAndTimestamp(pageNumber, pageSize, now);
             users.forEach(user -> {
-                em.lock(user, LockModeType.PESSIMISTIC_WRITE); // 페시미스틱 락 적용
+                em.lock(user, LockModeType.PESSIMISTIC_WRITE);
                 user.setTimeFromSignup(user.getTimeFromSignup() + 1);
                 user.setTodayMissionStatus(false);
             });
