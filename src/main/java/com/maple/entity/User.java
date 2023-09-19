@@ -47,7 +47,7 @@ public class User {
     private String character;
     private boolean todayMissionStatus;
     private int timeFromSignup;     //회원가입 한날부터 1일
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdAt;
 
     @JsonIgnore
     private static final int LAST_DAY =30;
